@@ -2,6 +2,7 @@
 import React from "react";
 import classNames from "classnames";
 import { NavLink } from "react-router-dom";
+import Logout from 'actions/UserActions';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";

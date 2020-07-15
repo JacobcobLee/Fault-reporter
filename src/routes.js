@@ -65,13 +65,6 @@ const dashboardRoutes = [
     icon: FeedBack,
     component: TableList,
     layout: "/admin"
-  },
-  {
-    path: "/logout",
-    name: "Logout",
-    icon: ExitToApp,
-    component: Functions,
-    layout: "/admin"
   }
 ];
 

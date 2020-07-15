@@ -1,5 +1,7 @@
 import React from "react";
+import { auth } from '../../Firebase';
 import classNames from "classnames";
+import { Field, reduxForm, reset } from 'redux-form';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -18,6 +20,7 @@ import Search from "@material-ui/icons/Search";
 // core components
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
+import logout from 'actions/UserActions';
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
@@ -49,7 +52,9 @@ export default function AdminNavbarLinks() {
   };
   return (
     <div className={classes.typo}>
-    <h6><b>Welcome, Bob Lazaar</b></h6>
+    <h6><b>Welcome, Bob Lazaar</b></h6>      
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button className="btn btn-danger" onClick={() => {auth.signOut();}}>Sign out</button>
   </div>
   );
+
 }
