@@ -1,6 +1,7 @@
 import React from 'react';
 import { Fragment } from 'react';
 import Select from 'react-select';
+import {useState} from 'react';
 import Button from "components/CustomButtons/Button.js";
 import Modal from 'react-bootstrap/Modal';
 import ModalHeader from 'react-bootstrap/ModalHeader';
@@ -8,13 +9,39 @@ import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalBody from 'react-bootstrap/ModalBody';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import Table from "components/Table/Table.js";
+import axios from 'axios';
 
+const stores = [];
+const array = [];
+function getStores(){
+  axios
+  .get("http://localhost:8080/api/v1/store2")
+  .then((response) => {
+    //console.log(response.data);
+      stores.push(response.data)
+      array.push(stores[0])
+      console.log(array);
+  })
+}
+  
+getStores();
 
-export default function managestoreModal(props){
+export default function ManagestoreModal(props){
+  const [search, setSearch] = useState('')
+  // const filterArray = stores[0].filter(item=>{
+  //   return item.code.toLowerCase().includes(search.toLowerCase())
+  // })
+  
+  //filter through all data instead of only 1
+   const filterArray = stores[0].filter(function(item){
+    return Object.values(item).some( val => 
+        String(val).toLowerCase().includes(search.toLowerCase()) 
+    )
+})
   return (
     <Modal
       {...props}
-      size="lg"
+      size="xl"
       aria-labelledby="contained-modal-title-vcenter"
       centered
       backdrop="static"
@@ -28,14 +55,15 @@ export default function managestoreModal(props){
         </ModalTitle>
       </ModalHeader>
       <ModalBody>
+      <input className="form-control" type="text" placeholder="Search" onChange={ e => setSearch(e.target.value)}/>
       <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "Store Location", "Store Address", "", ""]}
-              tableData={[
-                ["1","Hillion Mall", "Bukit View Street 71 #01-22 543221", <Button fullWidth color="info">Edit</Button>, <Button fullWidth color="danger">Remove</Button>],
-                ["2","Causeway Point", "Woodlands Ave 3 #B1-22 721233", <Button fullWidth color="info">Edit</Button>, <Button fullWidth color="danger">Remove</Button>],
-                ["3","Vivo City", "Bendemeer Street 1 #03-61 123999", <Button fullWidth color="info">Edit</Button>, <Button fullWidth color="danger">Remove</Button>]
-              ]}
+              tableHead={["Store Name", "Store Code", "Store Address", "", ""]}
+              tableData={
+                filterArray.map((array) => {
+                  return [array.name,array.code,array.address,<Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="info">Edit</Button>, <Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="danger">Remove</Button>]
+              })
+            }
             />
       </ModalBody>
       <ModalFooter>

@@ -8,22 +8,26 @@ import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalBody from 'react-bootstrap/ModalBody';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import Table from "components/Table/Table.js";
+import axios from 'axios';
 
-
+const storeOptions = [];
+function getStoreOptions(){
+  axios
+  .get("http://localhost:8080/api/v1/store")
+  .then((response) => {
+    response.data.forEach(storeName => {
+      var object = {value: storeName, label: storeName}
+      storeOptions.push(object)
+  });
+  //console.log(storeOptions);
+})
+  .catch((err) => {
+    console.log(err);
+  });
+}
+getStoreOptions();
 
 export default function resolvedcaseModal(props){
-  const faultOptions = [
-    { value: 'Aircon', label: 'Aircon'},
-    { value: 'Equipment', label: 'Equipment'},
-    { value: 'Furniture', label: 'Furniture'},
-    { value: 'Chiller', label: 'Chiller'}
-  ];  
-  const storeOptions = [
-    { value: 'Ang Mo Kio', label: 'Ang Mo Kio'},
-    { value: 'Hillion Mall', label: 'Hillion Mall'},
-    { value: 'Causeway Point', label: 'Causeway Point'},
-    { value: 'Vivo City', label: 'Vivo City'}
-  ];  
   return (
     <Modal
       {...props}
@@ -40,14 +44,6 @@ export default function resolvedcaseModal(props){
       </ModalHeader>
       <ModalBody>
       <Fragment>
-        <p><b>Fault types</b></p>
-        <Select
-          className="basic-single"
-          classNamePrefix="select"
-          name="color"
-          options={faultOptions}
-        />
-        <br></br>
         <p><b>Store Location</b></p>
         <Select
           className="basic-single"

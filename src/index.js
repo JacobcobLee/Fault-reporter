@@ -33,8 +33,11 @@ import Admin from "layouts/Admin.js";
 import RTL from "layouts/RTL.js";
 import Solve from "layouts/Solve.js";
 import View from "layouts/View.js";
+import functions from "views/Functions/Functions.js";
+
 
 import "assets/css/material-dashboard-react.css?v=1.9.0";
+import dashboardRoutes from "routes";
 
 const hist = createBrowserHistory();
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
@@ -50,11 +53,14 @@ ReactDOM.render(
 
       {/* Only if user is logged in then can access */}
       <AuthenticatedComponent>
+      {/* Allows user to edit the url and not be keep redirected to /admin/dashboard */}
+      <Route exact path="/" render={() => (
+        <Redirect to="/admin/dashboard"/>
+      )}/>
       <Route path="/admin" component={Admin} />
       <Route path="/rtl" component={RTL} />
-      <Route path="/newcases/solve" component={Solve} />
+      <Route path="/newcases/solve" component={Solve}/>
       <Route path="/resolvedcases/view" component={View} />
-      <Redirect from="/" to="/admin/dashboard" />
       </AuthenticatedComponent>
     </Switch>
   </Router>

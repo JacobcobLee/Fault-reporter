@@ -1,5 +1,6 @@
 import React from 'react';
-import { Fragment } from 'react';
+import { Fragment} from 'react';
+import {useState} from 'react';
 import Select from 'react-select';
 import Button from "components/CustomButtons/Button.js";
 import Modal from 'react-bootstrap/Modal';
@@ -8,21 +9,47 @@ import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalBody from 'react-bootstrap/ModalBody';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import Table from "components/Table/Table.js";
+import axios from 'axios';
 
 
-export default function newcaseModal(props){
-    const faultOptions = [
-    { value: 'Aircon', label: 'Aircon'},
-    { value: 'Equipment', label: 'Equipment'},
-    { value: 'Furniture', label: 'Furniture'},
-    { value: 'Chiller', label: 'Chiller'}
-  ];  
-  const storeOptions = [
-    { value: 'Ang Mo Kio', label: 'Ang Mo Kio'},
-    { value: 'Hillion Mall', label: 'Hillion Mall'},
-    { value: 'Causeway Point', label: 'Causeway Point'},
-    { value: 'Vivo City', label: 'Vivo City'}
-  ];  
+const newCases = [];
+const array =[];
+
+function getNewCases(){
+  axios
+  .get("http://localhost:8080/api/v1/newcases")
+  .then((response) => {
+    newCases.push(response.data)
+    console.log(newCases);
+    array.push(newCases[0])
+})
+}
+getNewCases();
+
+const storeOptions = [];
+function getStoreOptions(){
+  axios
+  .get("http://localhost:8080/api/v1/store")
+  .then((response) => {
+    response.data.forEach(storeName => {
+      var object = {value: storeName, label: storeName}
+      storeOptions.push(object)
+  });
+  //console.log(storeOptions);
+})
+  .catch((err) => {
+    console.log(err);
+  });
+}
+getStoreOptions();
+
+
+export default function NewcaseModal(props){
+  //To filter the table data using dropdown value
+  const [search, setSearch] = useState('')
+  const filterArray = newCases[0].filter(item=>{
+    return item.storeName.toLowerCase().includes(search.toLowerCase())
+  })
   return (
     <Modal
       {...props}
@@ -39,36 +66,31 @@ export default function newcaseModal(props){
       </ModalHeader>
       <ModalBody>
       <Fragment>
-        <p><b>Fault types</b></p>
-        <Select
-          className="basic-single"
-          classNamePrefix="select"
-          name="color"
-          options={faultOptions}
-        />
-        <br></br>
         <p><b>Store Location</b></p>
         <Select
           className="basic-single"
           classNamePrefix="select"
           name="color"
           options={storeOptions}
+          onChange={ e => setSearch(e.value) }
         />
       </Fragment>
       <Table
               tableHeaderColor="primary"
               tableHead={["Reported on", "Fault type", "Store Location", ""]}
-              tableData={[
-                ["02/07/2020 2.30PM", "Aircon", "Hillion Mall", <Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="info">Solve</Button>],
-                ["04/07/2020 5.30PM", "Chiller", "AMK Hub", <Button fullWidth color="info">Solve</Button>],
-                ["06/07/2020 10.30AM", "Griller", "Causeway Point", <Button fullWidth color="info">Solve</Button>]
-              ]}
-            />
+              tableData={
+                filterArray.map((array) => {
+                  return [array.dateTime,array.problem.category,array.storeName,<Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="info">Solve</Button>]
+                })
+              }
+            /> 
       </ModalBody>
       <ModalFooter>
+        <Button color="success" onClick={e => setSearch(e.value = "")}>Reset Filter</Button>
         <Button color="danger" onClick={props.onHide}>Close</Button>
       </ModalFooter>
     </Modal>
   );
 }
 
+//<Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="info">Solve</Button>
