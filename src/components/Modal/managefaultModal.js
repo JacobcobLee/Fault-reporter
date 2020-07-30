@@ -8,9 +8,42 @@ import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalBody from 'react-bootstrap/ModalBody';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import Table from "components/Table/Table.js";
+import axios from 'axios';
+import {useState} from 'react';
+
+const fault = [];
+const array = [];
+function getFault(){
+  axios
+  .get("http://localhost:8080/api/v1/category")
+  .then((response) => {
+    //console.log(response.data);
+      fault.push(response.data)
+      array.push(Object.values(fault[0]))
+      console.log(array);
+  })
+}
+getFault();
 
 
-export default function managefaultModal(props){
+export default function ManagefaultModal(props){
+  function deleteFault(faultid){
+    var answer = window.confirm("Are you sure you want to delete?");
+    if(answer){
+      axios
+     .delete("http://localhost:8080/api/v1/category/" + faultid)
+     window.location.href = "/admin/functions"
+    }
+    else{
+        window.close();
+    } 
+  }
+  const [search, setSearch] = useState('')
+
+  //filter through all data instead of only 1
+  const filterArray = array[0].filter(item=>{
+    return item.name.toLowerCase().includes(search.toLowerCase())
+  })
   return (
     <Modal
       {...props}
@@ -24,21 +57,23 @@ export default function managefaultModal(props){
         <ModalTitle id="contained-modal-title-vcenter">
           Manage Faults
           &nbsp;&nbsp;&nbsp;
-          <Button color="info">Add</Button>
+          <Button onClick={event =>  window.location.href='/fault/addfault'} color="info">Add</Button>
         </ModalTitle>
       </ModalHeader>
       <ModalBody>
+      <input className="form-control" type="text" placeholder="Search" onChange={ e => setSearch(e.target.value)}/>
       <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "Fault type", "Fault Questions", "", ""]}
-              tableData={[
-                ["1","Chiller", "How many chiller doors?", <Button fullWidth color="info">Edit</Button>, <Button fullWidth color="danger">Remove</Button>],
-                ["2","Griller", "What model is the grill?", <Button fullWidth color="info">Edit</Button>, <Button fullWidth color="danger">Remove</Button>],
-                ["3","Aircon", "What model is the aircon?", <Button fullWidth color="info">Edit</Button>, <Button fullWidth color="danger">Remove</Button>]
-              ]}
+              tableHead={["Fault type", "Has Radio Option?", "Has Checkbox Option?", "", ""]}
+              tableData={
+                filterArray.map((array) => {
+                  return [array.name,array.haveRadio,array.haveCheck,<Button onClick={event =>  window.location.href='/fault/editfault/'+array.uuid} fullWidth color="info">Edit</Button>,<Button onClick={() => deleteFault(array.uuid)} fullWidth color="danger">Remove</Button>]
+              })
+              }
             />
       </ModalBody>
       <ModalFooter>
+        <Button color="success" onClick={e => setSearch(e.value = "")}>Reset Filter</Button>
         <Button color="danger" onClick={props.onHide}>Close</Button>
       </ModalFooter>
     </Modal>

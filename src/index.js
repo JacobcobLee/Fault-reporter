@@ -33,7 +33,12 @@ import Admin from "layouts/Admin.js";
 import RTL from "layouts/RTL.js";
 import Solve from "layouts/Solve.js";
 import View from "layouts/View.js";
-import functions from "views/Functions/Functions.js";
+import Pending from "layouts/Pending.js";
+import Editqrcode from "layouts/Editqrcode.js";
+import Addstore from "layouts/Addstore.js";
+import Editstore from "layouts/Editstore.js";
+import AddFault from "layouts/AddFault.js";
+import EditFault from "layouts/EditFault.js";
 
 
 import "assets/css/material-dashboard-react.css?v=1.9.0";
@@ -41,6 +46,7 @@ import dashboardRoutes from "routes";
 
 const hist = createBrowserHistory();
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+
 
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
@@ -59,8 +65,14 @@ ReactDOM.render(
       )}/>
       <Route path="/admin" component={Admin} />
       <Route path="/rtl" component={RTL} />
-      <Route path="/newcases/solve" component={Solve}/>
-      <Route path="/resolvedcases/view" component={View} />
+      <Route path="/newcases/solve/" component={Solve}/>
+      <Route path="/pending/view/" component={Pending}/>
+      <Route path="/resolvedcases/view/" component={View} />
+      <Route path="/qr/editqrcode/" component={Editqrcode} />
+      <Route path="/store/addstore" component={Addstore} />
+      <Route path="/store/editstore/" component={Editstore} />
+      <Route path="/fault/addfault/" component={AddFault} />
+      <Route path="/fault/editfault/" component={EditFault} />
       </AuthenticatedComponent>
     </Switch>
   </Router>

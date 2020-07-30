@@ -40,7 +40,7 @@ export default function Functions() {
                   <CropFree/>
                 </CardIcon>
                 <p className={classes.cardCategory}>Manage QR Codes</p>
-                <h5 className={classes.cardTitle}>Add/Remove/Edit QR here!</h5>
+                <h5 className={classes.cardTitle}>Edit QR here!</h5>
               </CardHeader>
               <CardBody>
                 <Button onClick={() => setModalShow(true)} fullWidth color="success">View</Button> 
@@ -93,8 +93,8 @@ export default function Functions() {
                 <CardIcon color="primary">
                   <SupervisorAccount/>
                 </CardIcon>
-                <p className={classes.cardCategory}>Manage Accounts</p>
-                <h5 className={classes.cardTitle}>Add/Remove/Edit Accounts here!</h5>
+                <p className={classes.cardCategory}>View Accounts</p>
+                <h5 className={classes.cardTitle}>View ID,Email,Last Login here!</h5>
               </CardHeader>
               <CardBody>
                 <Button onClick={() => setModalShow4(true)} fullWidth color="success">View</Button> 

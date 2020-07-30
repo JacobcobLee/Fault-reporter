@@ -38,7 +38,14 @@ function getSpecificCases() {
 getSpecificCases();
 
 
-export default function View() {
+export default function Pending() {
+    const [edit, setEdit] = useState("Pending");
+    function putSpecificCases() {
+        axios
+            .put("http://localhost:8080/api/v1/fault/" + lastURLSegment,{"status": edit.toString() })
+            window.alert('Successfully edited case!')
+            window.location.href = "/admin/dashboard"
+    }
     //loop for all answers and if there's 2 or more, put comma in between
     function displayAnswer(dis) {
         let test = '';
@@ -116,10 +123,10 @@ export default function View() {
     }
     retrieveImg(displayspecificCases[0].imageurl);
 
-    const statusOptions = [{ value: "Resolved", label: "Resolved" }]
+    const statusOptions = [{ value: "Pending", label: "Pending" }, { value: "Resolved", label: "Resolved" }]
     return (
         <div>
-            <h3><b>Resolved Case (FOR VIEW ONLY)</b></h3>
+            <h3><b>Pending Case</b></h3>
             <GridContainer>
                 <GridItem xs={12} sm={12} md={3}>
                     <Card>
@@ -167,8 +174,8 @@ export default function View() {
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
                         <CardBody>
-                        <h4>{displayRadio(tryReturnRadio())}:</h4>
-                        <h5><b>{displayRadio(tryReturnRadio2())}</b></h5>
+                            <h4>{displayRadio(tryReturnRadio())}:</h4>
+                            <h5><b>{displayRadio(tryReturnRadio2())}</b></h5>
                     {/* OLDDDDDDDDDD <Card>
                     <CardHeader>
                             <h4>{displaynewCases[0].problem.checkbox.map(item=>{
@@ -195,12 +202,12 @@ export default function View() {
                     <br></br>
                     <h4>Issue Status:</h4>
                             <Select
-                                defaultValue={{ value: "Resolved", label: "Resolved" }}
+                                defaultValue={{ value: "Pending", label: "Pending" }}
                                 className="basic-single"
                                 classNamePrefix="select"
                                 name="color"
                                 options={statusOptions}
-                                isDisabled="true"
+                                onChange={e => setEdit(e.value)}
                             />
                         </CardBody>
                     </Card>
@@ -208,14 +215,9 @@ export default function View() {
             </GridContainer>
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
-                    <Button onClick={event =>  window.location.href='/admin/dashboard'} fullWidth color="success">Done</Button>
+                    <Button onClick={putSpecificCases} fullWidth color="success">Save</Button>
                 </GridItem>
             </GridContainer>
         </div>
     );
 }
-
-
-
-
-  

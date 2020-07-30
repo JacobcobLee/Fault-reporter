@@ -31,6 +31,7 @@ class Login extends Component {
 
   submitLogin(event) {
     event.preventDefault();
+    localStorage.setItem('user', this.state.email);// set user obj in the local storage to be this.state.email
     this.props.login(this.state.email, this.state.password).catch(err => {
       this.setState({
         error: err

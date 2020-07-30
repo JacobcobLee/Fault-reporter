@@ -8,6 +8,22 @@ import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import axios from 'axios';
+import {useState} from 'react';
+import Button from "components/CustomButtons/Button.js";
+
+const displayFeedback=[];
+const array=[];
+function getCustomerFeedbacks(){
+  axios
+  .get("http://localhost:8080/api/v1/feedback")
+  .then((response) => {
+    displayFeedback.push(response.data)
+    array.push(Object.values(displayFeedback[0]))
+    console.log(array[0]);
+  })
+  }
+getCustomerFeedbacks();
 
 const styles = {
   cardCategoryWhite: {
@@ -42,6 +58,14 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 export default function TableList() {
+  const [search, setSearch] = useState('')
+
+  //filter through all data instead of only 1
+   const filterArray = array[0].filter(function(item){
+    return Object.values(item).some( val => 
+        String(val).toLowerCase().includes(search.toLowerCase()) 
+    )
+})
   const classes = useStyles();
   return (
     <GridContainer>
@@ -54,17 +78,15 @@ export default function TableList() {
             </p>
           </CardHeader>
           <CardBody>
+          <input className="form-control" type="text" placeholder="Search" onChange={ e => setSearch(e.target.value)}/>
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "Store Location", "Feedback Type", "Standard", "Issue", "Ratings", "Served By"]}
-              tableData={[
-                ["1","Hillion Mall", "Service-Related", "Complaint", "Rude Staff, scolded my daughter" ,"1 star" ,"Mary Sac (18456)"],
-                ["2","Causeway Point", "Service-Related", "Compliment", "Polite and Patient" ,"5 star" ,"John Doe (18556)"],
-                ["3","Vivo City", "Product-Related", "Complaint", "Expired Ba Kua" ,"0 star" ,"Vivian (18436)"],
-                ["4","West Mall", "Service-Related", "Compliment", "Polite staff" ,"4 star" ," Jason Toh (18596)"],
-                ["5","JCube", "Product-Related", "Compliment", "Fresh and Fragrant Ba Kua" ,"5 star" ,"Darren Kong (18112)"],
-                ["6","Bedok Mall", "Product-Related", "Compliment", "Fresh Pork Floss" ,"3 star" ,"Savet Oh (18213)"]
-              ]}
+              tableHead={["Submitted On", "Store Location", "Feedback Type", "Standard", "Issue", "Ratings", "Served By", "Customer email", "Customer Contact", "Customer Name"]}
+              tableData={
+                filterArray.map((array) => {
+                  return [array.datetime,array.location,array.feedbackType,array.standard,array.issue,array.rating,array.staffname,array.custemail,array.custcontactno,array.custname]
+              })
+              }
             />
           </CardBody>
         </Card>

@@ -14,14 +14,20 @@ import axios from 'axios';
 
 const newCases = [];
 const array =[];
-
+const testarr=[];
 function getNewCases(){
   axios
-  .get("http://localhost:8080/api/v1/newcases")
+  .get("http://localhost:8080/api/v1/fault?status=Unresolved")
   .then((response) => {
+    try{
     newCases.push(response.data)
-    console.log(newCases);
-    array.push(newCases[0])
+    array.push(Object.values(newCases[0]))
+    //testarr.push(Object.values(array[0]))
+    console.log(array[0]);
+    }
+    catch(error){
+      console.log(error);
+    }
 })
 }
 getNewCases();
@@ -29,13 +35,13 @@ getNewCases();
 const storeOptions = [];
 function getStoreOptions(){
   axios
-  .get("http://localhost:8080/api/v1/store")
+  .get("http://localhost:8080/api/v1/allstorename")
   .then((response) => {
     response.data.forEach(storeName => {
       var object = {value: storeName, label: storeName}
       storeOptions.push(object)
   });
-  //console.log(storeOptions);
+ //console.log(storeOptions);
 })
   .catch((err) => {
     console.log(err);
@@ -47,7 +53,7 @@ getStoreOptions();
 export default function NewcaseModal(props){
   //To filter the table data using dropdown value
   const [search, setSearch] = useState('')
-  const filterArray = newCases[0].filter(item=>{
+  const filterArray = array[0].filter(item=>{
     return item.storeName.toLowerCase().includes(search.toLowerCase())
   })
   return (
@@ -80,7 +86,7 @@ export default function NewcaseModal(props){
               tableHead={["Reported on", "Fault type", "Store Location", ""]}
               tableData={
                 filterArray.map((array) => {
-                  return [array.dateTime,array.problem.category,array.storeName,<Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="info">Solve</Button>]
+                  return [array.dateTime,array.problem.category,array.storeName,<Button onClick={event =>  window.location.href='/newcases/solve/'+array.uuid} fullWidth color="info">Solve</Button>]
                 })
               }
             /> 

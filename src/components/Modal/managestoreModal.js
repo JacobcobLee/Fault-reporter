@@ -11,11 +11,12 @@ import ModalFooter from 'react-bootstrap/ModalFooter';
 import Table from "components/Table/Table.js";
 import axios from 'axios';
 
+
 const stores = [];
 const array = [];
 function getStores(){
   axios
-  .get("http://localhost:8080/api/v1/store2")
+  .get("http://localhost:8080/api/v1/store")
   .then((response) => {
     //console.log(response.data);
       stores.push(response.data)
@@ -26,7 +27,21 @@ function getStores(){
   
 getStores();
 
+
+
 export default function ManagestoreModal(props){
+  function deleteStore(storeCode){
+    var answer = window.confirm("Are you sure you want to delete?");
+    if(answer){
+      axios
+     .delete("http://localhost:8080/api/v1/store/" + storeCode)
+     window.location.href = "/admin/functions"
+    }
+    else{
+        window.close();
+    } 
+  }
+
   const [search, setSearch] = useState('')
   // const filterArray = stores[0].filter(item=>{
   //   return item.code.toLowerCase().includes(search.toLowerCase())
@@ -51,7 +66,7 @@ export default function ManagestoreModal(props){
         <ModalTitle id="contained-modal-title-vcenter">
           Manage Stores
           &nbsp;&nbsp;&nbsp;
-          <Button color="info">Add</Button>
+          <Button onClick={event =>  window.location.href='/store/addstore'}  color="info">Add</Button>
         </ModalTitle>
       </ModalHeader>
       <ModalBody>
@@ -61,12 +76,13 @@ export default function ManagestoreModal(props){
               tableHead={["Store Name", "Store Code", "Store Address", "", ""]}
               tableData={
                 filterArray.map((array) => {
-                  return [array.name,array.code,array.address,<Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="info">Edit</Button>, <Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="danger">Remove</Button>]
+                  return [array.name,array.code,array.address,<Button onClick={event =>  window.location.href='/store/editstore/'+array.code} fullWidth color="info">Edit</Button>, <Button onClick={() => deleteStore(array.code)} fullWidth color="danger">Remove</Button>]
               })
             }
             />
       </ModalBody>
       <ModalFooter>
+        <Button color="success" onClick={e => setSearch(e.value = "")}>Reset Filter</Button>
         <Button color="danger" onClick={props.onHide}>Close</Button>
       </ModalFooter>
     </Modal>

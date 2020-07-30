@@ -1,5 +1,6 @@
 import React from 'react';
-import { Fragment } from 'react';
+import { Fragment} from 'react';
+import {useState} from 'react';
 import Select from 'react-select';
 import Button from "components/CustomButtons/Button.js";
 import Modal from 'react-bootstrap/Modal';
@@ -10,16 +11,37 @@ import ModalFooter from 'react-bootstrap/ModalFooter';
 import Table from "components/Table/Table.js";
 import axios from 'axios';
 
+
+const pendingCases = [];
+const array =[];
+const testarr=[];
+function getPendingCases(){
+  axios
+  .get("http://localhost:8080/api/v1/fault?status=Pending")
+  .then((response) => {
+    try{
+    pendingCases.push(response.data)
+    array.push(Object.values(pendingCases[0]))
+    //testarr.push(Object.values(array[0]))
+    console.log(array[0]);
+    }
+    catch(error){
+      console.log(error);
+    }
+})
+}
+getPendingCases();
+
 const storeOptions = [];
 function getStoreOptions(){
   axios
-  .get("http://localhost:8080/api/v1/store")
+  .get("http://localhost:8080/api/v1/allstorename")
   .then((response) => {
     response.data.forEach(storeName => {
       var object = {value: storeName, label: storeName}
       storeOptions.push(object)
   });
-  //console.log(storeOptions);
+ //console.log(storeOptions);
 })
   .catch((err) => {
     console.log(err);
@@ -27,7 +49,13 @@ function getStoreOptions(){
 }
 getStoreOptions();
 
-export default function pendingcaseModal(props){
+
+export default function PendingcaseModal(props){
+  //To filter the table data using dropdown value
+  const [search, setSearch] = useState('')
+  const filterArray = array[0].filter(item=>{
+    return item.storeName.toLowerCase().includes(search.toLowerCase())
+  })
   return (
     <Modal
       {...props}
@@ -50,22 +78,25 @@ export default function pendingcaseModal(props){
           classNamePrefix="select"
           name="color"
           options={storeOptions}
+          onChange={ e => setSearch(e.value) }
         />
       </Fragment>
       <Table
               tableHeaderColor="primary"
-              tableHead={["Reported on", "Fault type", "Store Location", "PENDING"]}
-              tableData={[
-                ["02/07/2020 2.30PM", "Chiller", "Hillion Mall", <Button fullWidth color="info">View</Button>],
-                ["06/07/2020 10.30AM", "Griller", "Causeway Point", <Button fullWidth color="info">View</Button>],
-                ["04/07/2020 5.30PM", "Aircon", "AMK Hub", <Button fullWidth color="info">View</Button>]
-              ]}
-            />
+              tableHead={["Reported on", "Fault type", "Store Location", ""]}
+              tableData={
+                filterArray.map((array) => {
+                  return [array.dateTime,array.problem.category,array.storeName,<Button onClick={event =>  window.location.href='/pending/view/'+array.uuid} fullWidth color="info">View</Button>]
+                })
+              }
+            /> 
       </ModalBody>
       <ModalFooter>
+        <Button color="success" onClick={e => setSearch(e.value = "")}>Reset Filter</Button>
         <Button color="danger" onClick={props.onHide}>Close</Button>
       </ModalFooter>
     </Modal>
   );
 }
 
+//<Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="info">Solve</Button>

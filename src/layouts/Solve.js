@@ -9,21 +9,140 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
-import Button from "components/CustomButtons/Button.js";    
+import Button from "components/CustomButtons/Button.js";
+import axios from 'axios';
+import { Fragment } from 'react';
+import Select from 'react-select';
+import pendingcaseModal from "components/Modal/pendingcaseModal";
+import resolvedcaseModal from "components/Modal/resolvedcaseModal";
+import { useState } from 'react';
+import BackgroundImage from "react-background-image";
+
+import bgImage from "assets/img/bch_sidebar.jpg";
+
+
 
 
 const useStyles = makeStyles(styles);
 
+var pageURL = window.location.href;
+var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
+//console.log(lastURLSegment);
+
+const displayspecificCases = [];
+
+function getSpecificCases() {
+    axios
+        .get("http://localhost:8080/api/v1/fault/" + lastURLSegment)
+        .then((response) => {
+            //console.log("hello");
+            //console.log(displaynewCases[0].imageurl);
+            //     try{
+            displayspecificCases.push(response.data)
+            //   array.push(displaynewCases[0])
+            //   testarr.push(Object.values(array[0]))
+            //   console.log("xia mian");
+            //   console.log(testarr);
+            //     }
+            //     catch(error){
+            //         console.log(error)
+            //     }
+        })
+}
+
+getSpecificCases();
+
+
 export default function Solve() {
-    const classes = useStyles();
-    const [state, setState] = React.useState({
-        checkedA: true,
-        checkedB: true,
-      });
-      const handleChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-      };
-    
+    const [edit, setEdit] = useState("Unresolved");
+    function putSpecificCases() {
+        axios
+            .put("http://localhost:8080/api/v1/fault/" + lastURLSegment,{"status": edit.toString() })
+            window.alert('Successfully edited case!')
+            window.location.href = "/admin/dashboard"
+    }
+    //loop for all answers and if there's 2 or more, put comma in between
+    function displayAnswer(dis) {
+        let test = '';
+        for (let i = 0; i < dis.length; i++) {
+            if (i == dis.length - 1) {
+                test += dis[i];
+            } else {
+                test += dis[i] + ',';
+            }
+        }
+        return test;
+    }
+
+    //if data has no radio, it will display empty instead of error.
+    function displayRadio(display) {
+        if (display == null) {
+            return 'There is no radio';
+        } else {
+            return display;
+        }
+    }
+    //if data has one or more checkbox 
+    function displayData2(dis) {
+        if(displayspecificCases[0].problem.checkbox != null){
+            if (displayspecificCases[0].problem.checkbox.length > 1) {
+                return(displayspecificCases[0].problem.checkbox.map(item => {
+                    return (
+                        <Card>
+                            <CardHeader>
+                                <h4>{item.name} : </h4>
+                            </CardHeader>
+                            <CardBody>
+                                <h5><b>{displayAnswer(item.answer)}</b></h5>
+                            </CardBody>
+                        </Card>
+                    )
+                }))
+            } else {
+                return (
+                    <Card>
+                        <CardHeader>
+                            <h4>{displayspecificCases[0].problem.checkbox.name} : </h4>
+                        </CardHeader>
+                        <CardBody>
+                            <h5><b>{displayAnswer(displayspecificCases[0].problem.checkbox.answer)}</b></h5>
+                        </CardBody>
+                    </Card>
+                )
+            }
+        }else{
+        }
+        
+    }
+    //return radio if there is 
+    function tryReturnRadio() {
+        try {
+            return displayspecificCases[0].problem.radio.name
+        } catch (error) {
+            return null;
+        }
+    }
+    function tryReturnRadio2() {
+        try {
+            return displayspecificCases[0].problem.radio.answer
+        } catch (error) {
+            return null;
+        }
+    }
+    //function to retrieve image from firestore
+    const [img, setimg] = useState('');
+    function retrieveImg(imgURL) {
+        axios
+            .get("http://localhost:8080/api/v1/image?location=" + imgURL)
+            .then((response) => {
+                //console.log("A@@@@");
+                //console.log(response.data);
+                setimg(response.data.toString());
+            })
+    }
+    retrieveImg(displayspecificCases[0].imageurl);
+
+    const statusOptions = [{ value: "Unresolved", label: "Unresolved" }, { value: "Pending", label: "Pending" }, { value: "Resolved", label: "Resolved" }]
     return (
         <div>
             <h3><b>Solve Case</b></h3>
@@ -34,7 +153,7 @@ export default function Solve() {
                             <h4><b>Reported on:</b></h4>
                         </CardHeader>
                         <CardBody>
-                        <h5>02/07/2020 2.30PM</h5>
+                            <h5>{displayspecificCases[0].dateTime}</h5>
                         </CardBody>
                     </Card>
                 </GridItem>
@@ -44,7 +163,7 @@ export default function Solve() {
                             <h4><b>Store Location:</b></h4>
                         </CardHeader>
                         <CardBody>
-                        <h5>Hillion Mall</h5>
+                            <h5>{displayspecificCases[0].storeName}</h5>
                         </CardBody>
                     </Card>
                 </GridItem>
@@ -54,7 +173,7 @@ export default function Solve() {
                             <h4><b>Staff Reported:</b></h4>
                         </CardHeader>
                         <CardBody>
-                        <h5>Hock Soon</h5>
+                            <h5>{displayspecificCases[0].staffName}</h5>
                         </CardBody>
                     </Card>
                 </GridItem>
@@ -64,55 +183,60 @@ export default function Solve() {
                             <h4><b>Fault Type:</b></h4>
                         </CardHeader>
                         <CardBody>
-                        <h5>Aircon</h5>
+                            <h5>{displayspecificCases[0].problem.category}</h5>
                         </CardBody>
                     </Card>
                 </GridItem>
             </GridContainer>
             <h3><b>Incident Details</b></h3>
             <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
-                    <Card>
-                        <CardHeader>
-                            <h4>Fault Image:</h4>
-                        </CardHeader>
-                        <CardBody>
-                            <img height="150px" width="250px" src={faultimg} alt="..." />
-                        </CardBody>
-                    </Card>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={8}>
-                    <Card>
-                        <CardHeader>
-                            <h4>Description:</h4>
-                        </CardHeader>
-                        <CardBody>
-                           The aircon is leaking and i need it fixed asap.
-                        </CardBody>
-                        <CardHeader>
-                            <h4>Issue Status:</h4>
-                        </CardHeader>
-                        <CardBody>
-                        <Grid component="label" container alignItems="center" spacing={1}>
-                            <Grid item>Unsolved</Grid>
-                            <Grid item>
-                            <Switch
-                                checked={state.checkedA}
-                                onChange={handleChange}
-                                name="checkedA"
-                                color="primary"
-                                inputProps={{ 'aria-label': 'secondary checkbox' }}
-                            />
-                            </Grid>
-                            <Grid item>Solved</Grid>
-                        </Grid>
-                        </CardBody>
-                    </Card>
-                </GridItem>
                 <GridItem xs={12} sm={12} md={12}>
-                    <Button onClick={event =>  window.location.href='/admin/dashboard'} fullWidth color="success">Save</Button> 
+                    <Card>
+                        <CardBody>
+                        <h4>{displayRadio(tryReturnRadio())}:</h4>
+                        <h5><b>{displayRadio(tryReturnRadio2())}</b></h5>
+                    {/* OLDDDDDDDDDD <Card>
+                    <CardHeader>
+                            <h4>{displaynewCases[0].problem.checkbox.map(item=>{
+                                return item.name
+                            })} :</h4>
+                        </CardHeader>
+                        <CardBody>
+                            <h5><b>{displaynewCases[0].problem.checkbox.map(item=>{
+                                return item.answer
+                            })}</b></h5>
+                        </CardBody>
+                    </Card> */}
+                    <br></br>
+                    {
+                        displayData2(displayspecificCases[0].problem.checkbox)
+                    }
+                    <h4>Fault Image:</h4>
+                    <img width="350px" height="130px" src={img} />
+                    <br></br>
+                    <br></br>
+                    <h4>Description:</h4>
+                    {displayspecificCases[0].description}
+                    <br></br>
+                    <br></br>
+                    <h4>Issue Status:</h4>
+                            <Select
+                                defaultValue={{ value: "unresolved", label: "Unresolved" }}
+                                className="basic-single"
+                                classNamePrefix="select"
+                                name="color"
+                                options={statusOptions}
+                                onChange={e => setEdit(e.value)}
+                            />
+                        </CardBody>
+                    </Card>
+                </GridItem>
+            </GridContainer>
+            <GridContainer>
+                <GridItem xs={12} sm={12} md={12}>
+                    <Button onClick={putSpecificCases} fullWidth color="success">Save</Button>
                 </GridItem>
             </GridContainer>
         </div>
     );
-  }
+}

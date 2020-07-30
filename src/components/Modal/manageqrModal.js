@@ -15,11 +15,12 @@ const qr = [];
 const array = [];
 function getQR(){
   axios
-  .get("http://localhost:8080/api/v1/qrcodes")
+  .get("http://localhost:8080/api/v1/store")
   .then((response) => {
     //console.log(response.data);
       qr.push(response.data)
       array.push(qr[0])
+      console.log("herrrr");
       console.log(array);
   })
 }
@@ -46,23 +47,22 @@ export default function ManageqrModal(props){
       <ModalHeader closeButton >
         <ModalTitle id="contained-modal-title-vcenter">
           Manage QR Codes
-          &nbsp;&nbsp;&nbsp;
-          <Button color="info">Add</Button>
         </ModalTitle>
       </ModalHeader>
       <ModalBody>
       <input className="form-control" type="text" placeholder="Search" onChange={ e => setSearch(e.target.value)}/>
       <Table
               tableHeaderColor="primary"
-              tableHead={["Store Name", "Store Code", "QR String", "", ""]}
+              tableHead={["Store Name", "Store Code", "QR String", ""]}
               tableData={
                 filterArray.map((array) => {
-                  return [array.storename,array.storecode,array.qrstring,<Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="info">Edit</Button>, <Button onClick={event =>  window.location.href='/newcases/solve'} fullWidth color="danger">Remove</Button>]
+                  return [array.name,array.code,array.qrstring,<Button onClick={event =>  window.location.href='/qr/editqrcode/'+array.code} fullWidth color="info">Edit</Button>]
               })
               }
             />
       </ModalBody>
       <ModalFooter>
+        <Button color="success" onClick={e => setSearch(e.value = "")}>Reset Filter</Button>
         <Button color="danger" onClick={props.onHide}>Close</Button>
       </ModalFooter>
     </Modal>

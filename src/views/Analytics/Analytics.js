@@ -1,7 +1,4 @@
 import React from "react";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -13,32 +10,124 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import { Container, List } from "semantic-ui-react";
-import Dropdown from "components/DropdownAna/dropdown.js";
+import {Fragment} from 'react';
+import axios from 'axios';
+import Table from "components/Table/Table.js";
 
-const styles = {
-  cardCategoryWhite: {
-    color: "rgba(255,255,255,.62)",
-    margin: "0",
-    fontSize: "14px",
-    marginTop: "0",
-    marginBottom: "0"
-  },
-  cardTitleWhite: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none"
-  }
+
+
+const newCases = [];
+const array = [];
+
+const download = function (data) {
+  const blob = new Blob([data], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.setAttribute('hidden', '');
+  a.setAttribute('href', url);
+  a.setAttribute('download', 'download.csv');
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 };
 
-const useStyles = makeStyles(styles);
+
+function generateResolvedCases() {
+  axios
+    .get("http://localhost:8080/api/v1/fault?status=Resolved")
+    .then((response) => {
+      newCases.push(response.data)
+      array.push(Object.values(newCases[0]))
+      console.log(array);
+
+      const data = array[0].map(row => ({
+        ReportedOn: row.dateTime,
+        StoreName: row.storeName,
+        Category: row.problem.category,
+        Description: row.description,
+        StaffName: row.staffName,
+        Comments: row.comments
+      }));
+      console.log('sadas');
+      //console.log(data);
+
+      const csvRows = [];
+
+      //get the headers
+      const headers = Object.keys(data[0]);
+
+      csvRows.push(headers.join(','));
+
+      //loop over rows
+      for (const row of data) {
+        const values = headers.map(header => {
+
+          return row[header];
+        });
+        csvRows.push(values.join(','));
+      }
+      //form escaped comma seperated values
+      const newdata = csvRows.map(e => e).join('\n');
+      console.log(newdata);
+      download(newdata);
+    })
+    
+}
+
+const resolvedCases = [];
+const temp =[];
+function getResolvedCases(){
+  axios
+  .get("http://localhost:8080/api/v1/fault?status=Resolved")
+  .then((response) => {
+    try{
+    resolvedCases.push(response.data)
+    temp.push(Object.values(resolvedCases[0]))
+    console.log(array[0]);
+    }
+    catch(error){
+      console.log(error);
+    }
+})
+}
+getResolvedCases();
+
+
+
+
 
 export default function Analytics() {
-  const classes = useStyles();
   return (
-   <Dropdown />
+    <div>
+    <GridContainer>
+    <GridItem xs={12} sm={12} md={12}>
+      <Card>
+        <CardHeader color="primary">
+          <h4>Resolved Cases</h4>
+          <p>
+            Resolved cases can be generated as excel sheet and downloaded
+          </p>
+        </CardHeader>
+        <CardBody>
+          <Table
+            tableHeaderColor="primary"
+            tableHead={["Case Reported On", "Store Location", "Category", "Description", "Staff Name", "Comments"]}
+            tableData={
+              temp[0].map((temp) => {
+                return [temp.dateTime,temp.storeName,temp.problem.category,temp.description,temp.staffName,temp.comments]
+            })
+            }
+          />
+        </CardBody>
+      </Card>
+    </GridItem>
+  </GridContainer>
+    <GridContainer>
+      <GridItem xs={12} sm={12} md={12}>
+      {/* <p>Generate Excel Sheet</p> */}
+      <Button onClick={() => generateResolvedCases()} fullWidth color="info">Generate Excel Sheet</Button>
+      </GridItem>
+    </GridContainer>
+    </div>
   );
 }

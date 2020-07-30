@@ -25,6 +25,96 @@ import NewCaseModal from "components/Modal/newcaseModal.js";
 import ResolvedCaseModal from "components/Modal/resolvedcaseModal.js";
 import PendingCaseModal from "components/Modal/pendingcaseModal.js";
 import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import { card } from "assets/jss/material-dashboard-react";
+import { CardActions } from "@material-ui/core";
+import axios from 'axios';
+
+// const displayFeedback=[];
+// const array=[];
+// const temp=[];
+// const temp2=[];
+// var Chartist = require("chartist");
+// var delays = 80,
+//   durations = 500;
+// var delays2 = 80,
+//   durations2 = 500;
+
+//   // response.data.forEach(store => {
+//   //   var object = {value: store, label: store}
+//   //   faultOptions.push(object)
+//   // });
+// function getCustomerFeedbacks(){
+//   axios
+//   .get("http://localhost:8080/api/v1/feedback/chart")
+//   .then((response) => {
+//     displayFeedback.push(response.data)
+//     array.push(Object.values(displayFeedback[0]))
+//     array[0].forEach(item=>{
+//       var object = item.datetime
+//       var object2 = item.rating
+//       temp.push(object)
+//       temp2.push(object2)
+//     })
+//     console.log(temp);
+//   })
+//   const feedbackChart = {
+//     data: {
+//       labels: temp
+
+      
+//       ,
+//       series: temp2
+        
+      
+//     },
+//     options: {
+//       axisX: {
+//         showGrid: false
+//       },
+//       low: 0,
+//       high: 5,
+//       chartPadding: {
+//         top: 0,
+//         right: 5,
+//         bottom: 0,
+//         left: 0
+//       }
+//     },
+//     responsiveOptions: [
+//       [
+//         "screen and (max-width: 640px)",
+//         {
+//           seriesBarDistance: 5,
+//           axisX: {
+//             labelInterpolationFnc: function(value) {
+//               return value[0];
+//             }
+//           }
+//         }
+//       ]
+//     ],
+//     animation: {
+//       draw: function(data) {
+//         if (data.type === "bar") {
+//           data.element.animate({
+//             opacity: {
+//               begin: (data.index + 1) * delays2,
+//               dur: durations2,
+//               from: 0,
+//               to: 1,
+//               easing: "ease"
+//             }
+//           });
+//         }
+//       }
+//     }
+//   };
+//   console.log("HE");
+//   console.log(feedbackChart.data)
+//   return feedbackChart;
+//   }
+// //getCustomerFeedbacks();
 
 
 import {
@@ -33,11 +123,10 @@ import {
   completedTasksChart
 } from "variables/charts.js";
 
-import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
-import { card } from "assets/jss/material-dashboard-react";
-import { CardActions } from "@material-ui/core";
 
 const useStyles = makeStyles(styles);
+
+
 
 
 export default function Dashboard() {
@@ -47,37 +136,30 @@ export default function Dashboard() {
   const [modalShow3, setModalShow3] = React.useState(false);
   return (
     <div>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={4}>
+      {/* <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
           <Card chart>
-            <CardHeader color="success">
+            <CardHeader color="info">
               <ChartistGraph
                 className="ct-chart"
-                data={dailySalesChart.data}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
+                data={getCustomerFeedbacks().data}
+                type="Bar"
+                options={getCustomerFeedbacks().options}
+                responsiveOptions={getCustomerFeedbacks().responsiveOptions}
+                listener={getCustomerFeedbacks().animation}
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Faults reported in a week</h4>
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>
-                  <ArrowUpward className={classes.upArrowCardCategory} /> 25%
-                </span>{" "}
-                increase in today's reports
-              </p>
+              <h4 className={classes.cardTitle}>Recent Ratings</h4>
+              <p className={classes.cardCategory}>Ratings through Customer Feedbacks</p>
             </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> updated 4 minutes ago
-              </div>
-            </CardFooter>
           </Card>
         </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
+      </GridContainer> */}
+       <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
           <Card chart>
-            <CardHeader color="warning">
+            <CardHeader color="info">
               <ChartistGraph
                 className="ct-chart"
                 data={emailsSubscriptionChart.data}
@@ -88,36 +170,9 @@ export default function Dashboard() {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Faults reported in this year</h4>
-              <p className={classes.cardCategory}>Faults in Year Span</p>
+              <h4 className={classes.cardTitle}>Recent Ratings</h4>
+              <p className={classes.cardCategory}>Ratings through Customer Feedbacks</p>
             </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> updated 3 minutes ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="danger">
-              <ChartistGraph
-                className="ct-chart"
-                data={completedTasksChart.data}
-                type="Line"
-                options={completedTasksChart.options}
-                listener={completedTasksChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Faults reported today</h4>
-              <p className={classes.cardCategory}>Faults in today's timing</p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> updated 1 minute ago
-              </div>
-            </CardFooter>
           </Card>
         </GridItem>
       </GridContainer>
