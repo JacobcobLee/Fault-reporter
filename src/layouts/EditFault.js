@@ -53,9 +53,13 @@ export default function EditFault() {
     let radioval = {};
     if (temp[0][0].radio != null) {
         radioval = Object.values(temp[0][0].radio);
-        console.log('success');
+        if(radioval.length > 1){
+            radioval = [{ name: radioval[0].name, answer: radioval[0].answer }, { name: radioval[1].name, answer: radioval[1].answer }]
+        }else{
+            radioval = [{ name: radioval[0].name, answer: radioval[0].answer }, { name: '', answer: '' }]
+        }
     } else {
-        radioval = [{ name: '', answer: '' }];
+        radioval = [{ name: '', answer: '' }, { name: '', answer: '' }];
     }
     let checkval = {};
     if (temp[0][0].checkbox != null) {
@@ -77,8 +81,10 @@ export default function EditFault() {
         inputval = '';
     }
     const [inputquestion, setInputQuestion] = useState(inputval.toString());
-    const [radioquestion, setRadioQuestion] = useState(radioval[0].name);
-    const [radioanswer, setRadioAnswer] = useState(radioval[0].answer.toString());
+    const [radioquestion1, setRadioQuestion1] = useState(radioval[0].name);
+    const [radioanswer1, setRadioAnswer1] = useState(radioval[0].answer.toString());
+    const [radioquestion2, setRadioQuestion2] = useState(radioval[1].name);
+    const [radioanswer2, setRadioAnswer2] = useState(radioval[1].answer.toString());
     const [checkboxquestion1, setCheckboxQuestion1] = useState(checkval[0].name);
     const [checkboxanswer1, setCheckboxAnwer1] = useState(checkval[0].answer.toString());
     const [checkboxquestion2, setCheckboxQuestion2] = useState(checkval[1].name);
@@ -99,8 +105,12 @@ export default function EditFault() {
 
     }
     function validateRadio() {
-        if ((radioquestion != '') && (radioanswer != '')) {
-            return { radioquestion: { name: radioquestion, answer: radioanswer.split(',') } };
+        if ((radioquestion1 != '') && (radioanswer1 != '')) {
+            if ((radioquestion2 != '') && (radioanswer2 != '')) {
+                return { radioquestion1: { answer: radioanswer1.split(','), name: radioquestion1 }, radioquestion2: { answer: radioanswer2.split(','), name: radioquestion2 } };
+            } else {
+                return { radioquestion1: { answer: radioanswer1.split(','), name: radioquestion1 } };
+            }
         } else {
             return null;
         }
@@ -160,8 +170,10 @@ export default function EditFault() {
     function onChangeRadio(e) {
         setDisplayHaveRadio(e.value);
         if (e.value == 'false') {
-            setRadioQuestion('');
-            setRadioAnswer('');
+            setRadioQuestion1('');
+            setRadioAnswer1('');
+            setRadioQuestion2('');
+            setRadioAnswer2('');
         }
 
 
@@ -189,14 +201,20 @@ export default function EditFault() {
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
                         <CardHeader>
-                            <h3><b>Radio</b></h3>
+                            <h3><b>Dropdown</b></h3>
                         </CardHeader>
                         <CardBody>
-                            <h4>Radio Question :</h4>
-                            <input type="text" onChange={e => setRadioQuestion(e.target.value)} className="form-control" value={radioquestion} isDisabled="false" />
+                            <h4>Dropdown Question 1:</h4>
+                            <input type="text" onChange={e => setRadioQuestion1(e.target.value)} className="form-control" value={radioquestion1} isDisabled="false" />
                             <br></br>
-                            <h4>Radio Answer :</h4>
-                            <input type="text" onChange={e => setRadioAnswer(e.target.value)} className="form-control" value={radioanswer} isDisabled="false" />
+                            <h4>Dropdown Answer 1:</h4>
+                            <input type="text" onChange={e => setRadioAnswer1(e.target.value)} className="form-control" value={radioanswer1} isDisabled="false" />
+                            <br></br>
+                            <h4>Dropdown Question 2 :</h4>
+                            <input type="text" onChange={e => setRadioQuestion2(e.target.value)} className="form-control" value={radioquestion2} isDisabled="false" />
+                            <br></br>
+                            <h4>Dropdown Answer 2:</h4>
+                            <input type="text" onChange={e => setRadioAnswer2(e.target.value)} className="form-control" value={radioanswer2} isDisabled="false" />
                         </CardBody>
                     </Card>
                 </GridItem>
@@ -294,7 +312,7 @@ export default function EditFault() {
                             <h4><b>Fault Name (Category) :</b></h4>
                             <input className="form-control" onChange={e => setFaultName(e.target.value)} type="text" placeholder="Edit Fault Name, example..Electric Griller" defaultValue={faultname} onChange={e => setFaultName(e.target.value)} />
                             <br></br>
-                            <h4><b>Have Radio :</b></h4>
+                            <h4><b>Have Dropdown :</b></h4>
                             {console.log(temp[0][0].haveRadio)}
                             <Select
                                 defaultValue={returnDefValue(displayhaveradio)}

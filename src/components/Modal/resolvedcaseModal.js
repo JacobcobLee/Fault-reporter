@@ -17,7 +17,7 @@ const array =[];
 const testarr=[];
 function getResolvedCases(){
   axios
-  .get("http://localhost:8080/api/v1/fault?status=Resolved")
+  .get("http://localhost:8080/api/v1/faultresolved10") //only take last 10 of resolved cases. the rest can view at analytics
   .then((response) => {
     try{
     resolvedCases.push(response.data)

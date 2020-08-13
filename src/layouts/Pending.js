@@ -40,9 +40,29 @@ getSpecificCases();
 
 export default function Pending() {
     const [edit, setEdit] = useState("Pending");
+    const [comment,setComment] = useState(displayspecificCases[0].comments);
+
+    let user2 = "sample text";
+
+    //this function will get the email the user entered from the local storage
+    function userName() {
+        if (localStorage.getItem('user')) {
+            user2 = localStorage.getItem('user');// this sets the local var with the one in the local storage
+            //setCurrentUser(user2)
+            return (
+                <div>
+                <h4>Posting/Saving As:</h4>
+                <input type="text" defaultValue={user2} className="form-control" disabled="true"></input>
+                </div>
+            )
+            // console.log(user2); //display the the username to check in the console 
+        }
+    }
+
+
     function putSpecificCases() {
         axios
-            .put("http://localhost:8080/api/v1/fault/" + lastURLSegment,{"status": edit.toString() })
+            .put("http://localhost:8080/api/v1/fault/" + lastURLSegment,{"status": edit.toString(), "comments": comment.toString(),"lasteditedby": user2.toString() })
             window.alert('Successfully edited case!')
             window.location.href = "/admin/dashboard"
     }
@@ -193,7 +213,7 @@ export default function Pending() {
                     }
                     <br></br>
                     <h4>Fault Image:</h4>
-                    <img width="350px" height="130px" src={img} />
+                    <img width="360px" height="270px" src={img} />
                     <br></br>
                     <br></br>
                     <h4>Description:</h4>
@@ -209,6 +229,14 @@ export default function Pending() {
                                 options={statusOptions}
                                 onChange={e => setEdit(e.value)}
                             />
+                    <br></br>
+                    <h4>Comments:</h4>
+                    <textarea type="text" defaultValue={comment} onChange={e=>setComment(e.target.value)} className="form-control" />
+                    <br></br>
+                    <h4>Last Edited By:</h4>
+                    <input type="text" defaultValue={displayspecificCases[0].lasteditedby} disabled="true" className="form-control"></input>
+                    <br></br>
+                    {userName()}
                         </CardBody>
                     </Card>
                 </GridItem>

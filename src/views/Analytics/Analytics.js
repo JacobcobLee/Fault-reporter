@@ -13,66 +13,66 @@ import { Container, List } from "semantic-ui-react";
 import {Fragment} from 'react';
 import axios from 'axios';
 import Table from "components/Table/Table.js";
-
+import ReactPaginate from 'react-paginate';
 
 
 const newCases = [];
 const array = [];
 
-const download = function (data) {
-  const blob = new Blob([data], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.setAttribute('hidden', '');
-  a.setAttribute('href', url);
-  a.setAttribute('download', 'download.csv');
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-};
+// const download = function (data) {
+//   const blob = new Blob([data], { type: 'text/csv' });
+//   const url = window.URL.createObjectURL(blob);
+//   const a = document.createElement('a');
+//   a.setAttribute('hidden', '');
+//   a.setAttribute('href', url);
+//   a.setAttribute('download', 'download.csv');
+//   document.body.appendChild(a);
+//   a.click();
+//   document.body.removeChild(a);
+// };
 
 
-function generateResolvedCases() {
-  axios
-    .get("http://localhost:8080/api/v1/fault?status=Resolved")
-    .then((response) => {
-      newCases.push(response.data)
-      array.push(Object.values(newCases[0]))
-      console.log(array);
+// function generateResolvedCases() {
+//   axios
+//     .get("http://localhost:8080/api/v1/fault?status=Resolved")
+//     .then((response) => {
+//       newCases.push(response.data)
+//       array.push(Object.values(newCases[0]))
+//       console.log(array);
 
-      const data = array[0].map(row => ({
-        ReportedOn: row.dateTime,
-        StoreName: row.storeName,
-        Category: row.problem.category,
-        Description: row.description,
-        StaffName: row.staffName,
-        Comments: row.comments
-      }));
-      console.log('sadas');
-      //console.log(data);
+//       const data = array[0].map(row => ({
+//         ReportedOn: row.dateTime,
+//         StoreName: row.storeName,
+//         Category: row.problem.category,
+//         Description: row.description,
+//         StaffName: row.staffName,
+//         Comments: row.comments
+//       }));
+//       console.log('sadas');
+//       //console.log(data);
 
-      const csvRows = [];
+//       const csvRows = [];
 
-      //get the headers
-      const headers = Object.keys(data[0]);
+//       //get the headers
+//       const headers = Object.keys(data[0]);
 
-      csvRows.push(headers.join(','));
+//       csvRows.push(headers.join(','));
 
-      //loop over rows
-      for (const row of data) {
-        const values = headers.map(header => {
+//       //loop over rows
+//       for (const row of data) {
+//         const values = headers.map(header => {
 
-          return row[header];
-        });
-        csvRows.push(values.join(','));
-      }
-      //form escaped comma seperated values
-      const newdata = csvRows.map(e => e).join('\n');
-      console.log(newdata);
-      download(newdata);
-    })
+//           return row[header];
+//         });
+//         csvRows.push(values.join(','));
+//       }
+//       //form escaped comma seperated values
+//       const newdata = csvRows.map(e => e).join('\n');
+//       console.log(newdata);
+//       download(newdata);
+//     })
     
-}
+// }
 
 const resolvedCases = [];
 const temp =[];
@@ -124,8 +124,7 @@ export default function Analytics() {
   </GridContainer>
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
-      {/* <p>Generate Excel Sheet</p> */}
-      <Button onClick={() => generateResolvedCases()} fullWidth color="info">Generate Excel Sheet</Button>
+      {/* <Button onClick={() => generateResolvedCases()} fullWidth color="info">Generate Excel Sheet</Button> */}
       </GridItem>
     </GridContainer>
     </div>

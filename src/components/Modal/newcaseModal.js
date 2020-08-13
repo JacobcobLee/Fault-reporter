@@ -17,7 +17,7 @@ const array =[];
 const testarr=[];
 function getNewCases(){
   axios
-  .get("http://localhost:8080/api/v1/fault?status=Unresolved")
+  .get("http://localhost:8080/api/v1/faultunresolved")
   .then((response) => {
     try{
     newCases.push(response.data)

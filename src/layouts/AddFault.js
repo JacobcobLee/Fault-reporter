@@ -27,8 +27,10 @@ export default function AddFault(){
 
     //for all answer state
     const [faultname,setFaultName] = useState("");
-    const [radioquestion,setRadioQuestion] = useState("");
-    const [radioanswer,setRadioAnswer] = useState("");
+    const [radioquestion1,setRadioQuestion1] = useState("");
+    const [radioanswer1,setRadioAnswer1] = useState("");
+    const [radioquestion2,setRadioQuestion2] = useState("");
+    const [radioanswer2,setRadioAnswer2] = useState("");
     const [inputquestion,setInputQuestion] = useState("");
     const [checkboxquestion1,setCheckboxQuestion1] = useState('');
     const [checkboxanswer1,setCheckboxAnwer1] = useState("");
@@ -49,8 +51,12 @@ export default function AddFault(){
 
     }
     function validateRadio(){
-        if((radioquestion != '') && (radioanswer != '')){
-            return {radioquestion: {name: radioquestion, answer:radioanswer.split(',')}};
+        if((radioquestion1 != '') && (radioanswer1 != '')){
+            if((radioquestion2 != '') && (radioanswer2 != '')){
+                return {radioquestion1: {answer: radioanswer1.split(','),name: radioquestion1}, radioquestion2: {answer: radioanswer2.split(','),name:radioanswer2}};
+            }else{
+                return {radioquestion1: {name: radioquestion1, answer:radioanswer1.split(',')}};
+            }
         }else{
             return null;
         }
@@ -114,14 +120,20 @@ export default function AddFault(){
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
                         <CardHeader>
-                            <h3><b>Radio</b></h3>
+                            <h3><b>Dropdown</b></h3>
                         </CardHeader>
                         <CardBody>
-                        <h4>Radio Question :</h4>
-                        <input  onChange={e=>setRadioQuestion(e.target.value)} className="form-control" type="text" placeholder="Enter Radio Question.."/>
+                        <h4>Dropdown Question 1:</h4>
+                        <input  onChange={e=>setRadioQuestion1(e.target.value)} className="form-control" type="text" placeholder="Enter Dropdown 1 Question.."/>
                         <br></br>
-                        <h4>Radio Answer (Text will be split into using (,) e.g Apple,Orange) :</h4>
-                        <input onChange={e=>setRadioAnswer(e.target.value)} className="form-control" type="text" placeholder="Enter Radio Answer.."/>
+                        <h4>Dropdown Answer 1 (Text will be split into using (,) e.g Apple,Orange) :</h4>
+                        <input onChange={e=>setRadioAnswer1(e.target.value)} className="form-control" type="text" placeholder="Enter Dropdown 1 Answer.."/>
+                        <br></br>
+                        <h4>Dropdown Question 2:</h4>
+                        <input  onChange={e=>setRadioQuestion2(e.target.value)} className="form-control" type="text" placeholder="Enter Dropdown 2 Question.."/>
+                        <br></br>
+                        <h4>Dropdown Answer 2 (Text will be split into using (,) e.g Apple,Orange) :</h4>
+                        <input onChange={e=>setRadioAnswer2(e.target.value)} className="form-control" type="text" placeholder="Enter Dropdown 2 Answer.."/>
                         </CardBody>
                     </Card>
                 </GridItem>
@@ -188,7 +200,7 @@ export default function AddFault(){
                         <CardBody>
                         <input onChange={e=>setFaultName(e.target.value)} className="form-control" type="text" placeholder="Enter Fault Name.."/>
                         <br></br>
-                    <h4><b>Have Radio :</b></h4>
+                    <h4><b>Have Dropdown :</b></h4>
                     <Select
                         defaultValue={{ value: "true", label: "True" }}
                         className="basic-single"

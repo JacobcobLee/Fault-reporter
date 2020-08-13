@@ -18,6 +18,7 @@ import resolvedcaseModal from "components/Modal/resolvedcaseModal";
 import { useState } from 'react';
 import BackgroundImage from "react-background-image";
 
+
 import bgImage from "assets/img/bch_sidebar.jpg";
 
 
@@ -55,11 +56,31 @@ getSpecificCases();
 
 export default function Solve() {
     const [edit, setEdit] = useState("Unresolved");
+    const [comment, setComment] = useState(displayspecificCases[0].comments);
+    //const [currentuser,setCurrentUser] = useState();
+
+    let user2 = "sample text";
+
+    //this function will get the email the user entered from the local storage
+    function userName() {
+        if (localStorage.getItem('user')) {
+            user2 = localStorage.getItem('user');// this sets the local var with the one in the local storage
+            //setCurrentUser(user2)
+            return (
+                <div>
+                <h4>Posting/Saving As:</h4>
+                <input type="text" defaultValue={user2} className="form-control" disabled="true"></input>
+                </div>
+            )
+            // console.log(user2); //display the the username to check in the console 
+        }
+    }
+
     function putSpecificCases() {
         axios
-            .put("http://localhost:8080/api/v1/fault/" + lastURLSegment,{"status": edit.toString() })
-            window.alert('Successfully edited case!')
-            window.location.href = "/admin/dashboard"
+            .put("http://localhost:8080/api/v1/fault/" + lastURLSegment, { "status": edit.toString(), "comments": comment.toString(), "lasteditedby": user2.toString() })
+        window.alert('Successfully edited case!')
+        window.location.href = "/admin/dashboard"
     }
     //loop for all answers and if there's 2 or more, put comma in between
     function displayAnswer(dis) {
@@ -84,9 +105,9 @@ export default function Solve() {
     }
     //if data has one or more checkbox 
     function displayData2(dis) {
-        if(displayspecificCases[0].problem.checkbox != null){
+        if (displayspecificCases[0].problem.checkbox != null) {
             if (displayspecificCases[0].problem.checkbox.length > 1) {
-                return(displayspecificCases[0].problem.checkbox.map(item => {
+                return (displayspecificCases[0].problem.checkbox.map(item => {
                     return (
                         <Card>
                             <CardHeader>
@@ -110,9 +131,9 @@ export default function Solve() {
                     </Card>
                 )
             }
-        }else{
+        } else {
         }
-        
+
     }
     //return radio if there is 
     function tryReturnRadio() {
@@ -137,6 +158,8 @@ export default function Solve() {
             .then((response) => {
                 //console.log("A@@@@");
                 //console.log(response.data);
+                console.log("iamge here");
+                console.log(response.data);
                 setimg(response.data.toString());
             })
     }
@@ -193,9 +216,9 @@ export default function Solve() {
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
                         <CardBody>
-                        <h4>{displayRadio(tryReturnRadio())}:</h4>
-                        <h5><b>{displayRadio(tryReturnRadio2())}</b></h5>
-                    {/* OLDDDDDDDDDD <Card>
+                            <h4>{displayRadio(tryReturnRadio())}:</h4>
+                            <h5><b>{displayRadio(tryReturnRadio2())}</b></h5>
+                            {/* OLDDDDDDDDDD <Card>
                     <CardHeader>
                             <h4>{displaynewCases[0].problem.checkbox.map(item=>{
                                 return item.name
@@ -207,19 +230,19 @@ export default function Solve() {
                             })}</b></h5>
                         </CardBody>
                     </Card> */}
-                    <br></br>
-                    {
-                        displayData2(displayspecificCases[0].problem.checkbox)
-                    }
-                    <h4>Fault Image:</h4>
-                    <img width="350px" height="130px" src={img} />
-                    <br></br>
-                    <br></br>
-                    <h4>Description:</h4>
-                    {displayspecificCases[0].description}
-                    <br></br>
-                    <br></br>
-                    <h4>Issue Status:</h4>
+                            <br></br>
+                            {
+                                displayData2(displayspecificCases[0].problem.checkbox)
+                            }
+                            <h4>Fault Image:</h4>
+                            <img width="360px" height="270px" src={img} />
+                            <br></br>
+                            <br></br>
+                            <h4>Description:</h4>
+                            {displayspecificCases[0].description}
+                            <br></br>
+                            <br></br>
+                            <h4>Issue Status:</h4>
                             <Select
                                 defaultValue={{ value: "unresolved", label: "Unresolved" }}
                                 className="basic-single"
@@ -228,6 +251,11 @@ export default function Solve() {
                                 options={statusOptions}
                                 onChange={e => setEdit(e.value)}
                             />
+                            <br></br>
+                            <h4>Comments:</h4>
+                            <textarea type="text" defaultValue={comment} onChange={e => setComment(e.target.value)} className="form-control" />
+                            <br></br>
+                            {userName()}
                         </CardBody>
                     </Card>
                 </GridItem>

@@ -186,7 +186,7 @@ export default function View() {
                     }
                     <br></br>
                     <h4>Fault Image:</h4>
-                    <img width="350px" height="130px" src={img} />
+                    <img width="360px" height="270px" src={img} />
                     <br></br>
                     <br></br>
                     <h4>Description:</h4>
@@ -202,6 +202,12 @@ export default function View() {
                                 options={statusOptions}
                                 isDisabled="true"
                             />
+                     <br></br>
+                    <h4>Comments:</h4>
+                    <textarea type="text" disabled="true" defaultValue={displayspecificCases[0].comments} className="form-control" />
+                    <br></br>
+                    <h4>Resolved By:</h4>
+                    <input type="text" defaultValue={displayspecificCases[0].lasteditedby} disabled="true" className="form-control"></input>
                         </CardBody>
                     </Card>
                 </GridItem>

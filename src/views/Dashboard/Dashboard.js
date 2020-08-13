@@ -29,6 +29,8 @@ import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js"
 import { card } from "assets/jss/material-dashboard-react";
 import { CardActions } from "@material-ui/core";
 import axios from 'axios';
+import {useState} from 'react';
+
 
 // const displayFeedback=[];
 // const array=[];
@@ -126,10 +128,248 @@ import {
 
 const useStyles = makeStyles(styles);
 
+var Chartist = require("chartist");
+var delays = 80,
+  durations = 500;
+var delays2 = 80,
+  durations2 = 500;
+
+   
 
 
 
 export default function Dashboard() {
+
+//CASES REPORTED
+const [casescount,setCasesCount] = useState()
+const [ytdcasescount,setYtdCasesCount] = useState()
+const [thedaybeforeytdcasescount,setTheDayBeforeYtdCasesCount] = useState()
+const [complimentcount,setComplimentCount] = useState()
+const [complaintcount,setComplaintCount] = useState()
+
+
+
+//for today date
+const array = [];
+const array2 = [];
+let test;
+function getcasestodayChart(){
+  axios
+  .get("http://localhost:8080/api/v1/casestodaychart")
+  .then((response) => {
+    console.log("its here");
+    //console.log(response.data);
+    array.push(Object.keys(response.data))
+    array2.push(array[0].length)
+    test = array2.toString();
+    console.log(array2);
+    setCasesCount(test)
+  })
+}
+
+getcasestodayChart();
+
+//for ytd date
+const ytdarray = [];
+const ytdarray2 = [];
+let ytdtest;
+function getcasesytdChart(){
+  axios
+  .get("http://localhost:8080/api/v1/casesyesterdaychart")
+  .then((response) => {
+    console.log("its here");
+    //console.log(response.data);
+    ytdarray.push(Object.keys(response.data))
+    ytdarray2.push(ytdarray[0].length)
+    ytdtest = ytdarray2.toString();
+    console.log(ytdarray2);
+    setYtdCasesCount(ytdtest)
+  })
+}
+
+getcasesytdChart();
+
+//for the day before ytd date
+const thedaybeforeytdarray = [];
+const thedaybeforeytdarray2 = [];
+let thedaybeforeytdtest;
+function getcasesthedaybeforeytdChart(){
+  axios
+  .get("http://localhost:8080/api/v1/casesthedaybeforeytdchart")
+  .then((response) => {
+    console.log("its here");
+    //console.log(response.data);
+    thedaybeforeytdarray.push(Object.keys(response.data))
+    thedaybeforeytdarray2.push(thedaybeforeytdarray[0].length)
+    thedaybeforeytdtest = thedaybeforeytdarray2.toString();
+    console.log(thedaybeforeytdarray2);
+    setTheDayBeforeYtdCasesCount(thedaybeforeytdtest)
+  })
+}
+
+getcasesthedaybeforeytdChart();
+
+
+
+//yesterday,the day before yesterday
+var minusonedate = new Date().getDate() -1;
+var minustwodate = minusonedate -1;
+var month = new Date().getMonth() + 1;
+var year = new Date().getFullYear();
+var yesterdayDate = minusonedate + '/' + month + '/' + year ;
+var thedaybeforeDate = minustwodate + '/' + month + '/' + year ;
+
+const newcasesChart = {
+  data: {
+    labels: [thedaybeforeDate,yesterdayDate,"Cases reported today"]
+
+    
+    ,
+    series: [[thedaybeforeytdcasescount,ytdcasescount,casescount]]
+      
+    
+  },
+  options: {
+    axisX: {
+      showGrid: false
+    },
+    low: 0,
+    high: 8,
+    chartPadding: {
+      top: 0,
+      right: 5,
+      bottom: 0,
+      left: 0
+    }
+  },
+  responsiveOptions: [
+    [
+      "screen and (max-width: 640px)",
+      {
+        seriesBarDistance: 5,
+        axisX: {
+          labelInterpolationFnc: function(value) {
+            return value[0];
+          }
+        }
+      }
+    ]
+  ],
+  animation: {
+    draw: function(data) {
+      if (data.type === "bar") {
+        data.element.animate({
+          opacity: {
+            begin: (data.index + 1) * delays2,
+            dur: durations2,
+            from: 0,
+            to: 1,
+            easing: "ease"
+          }
+        });
+      }
+    }
+  }
+};
+
+
+//CUSTOMER FEEDBACK
+
+//for compliment feedback
+const feedbackcomplimentarray = [];
+const feedbackcomplimentarray2 = [];
+let feedbackcomplimenttest;
+function getcomplimentChart(){
+  axios
+  .get("http://localhost:8080/api/v1/feedbackcomplimentchart")
+  .then((response) => {
+    console.log("its here");
+    console.log(response.data);
+    feedbackcomplimentarray.push(Object.keys(response.data))
+    feedbackcomplimentarray2.push(feedbackcomplimentarray[0].length)
+    feedbackcomplimenttest = feedbackcomplimentarray2.toString();
+    setComplimentCount(feedbackcomplimenttest)
+  })
+}
+
+getcomplimentChart();
+
+//for complaint feedback
+const feedbackcomplaintarray = [];
+const feedbackcomplaintarray2 = [];
+let feedbackcomplainttest;
+function getcomplaintChart(){
+  axios
+  .get("http://localhost:8080/api/v1/feedbackcomplaintchart")
+  .then((response) => {
+    console.log("its here");
+    console.log(response.data);
+    feedbackcomplaintarray.push(Object.keys(response.data))
+    feedbackcomplaintarray2.push(feedbackcomplaintarray[0].length)
+    feedbackcomplainttest = feedbackcomplaintarray2.toString();
+    setComplaintCount(feedbackcomplainttest)
+  })
+}
+
+getcomplaintChart();
+
+
+const customerfeedbackChart = {
+  data: {
+    labels: ["Compliment","Feedback"]
+
+    
+    ,
+    series: [[complimentcount,complaintcount]]
+      
+    
+  },
+  options: {
+    axisY: {
+      onlyInteger:false,
+      showGrid:false,
+      offset:70
+    },
+    axisX: {
+      onlyInteger:true,
+    },
+    low:0,
+    high:10,
+    seriesBarDistance: 10,
+    reverseData: true,
+    horizontalBars: true,
+  },
+  responsiveOptions: [
+    [
+      "screen and (max-width: 640px)",
+      {
+        seriesBarDistance: 5,
+        axisX: {
+          labelInterpolationFnc: function(value) {
+            return value[0];
+            
+          }
+        }
+      }
+    ]
+  ],
+  animation: {
+    draw: function(data) {
+      if (data.type === "bar") {
+        data.element.animate({
+          opacity: {
+            begin: (data.index + 1) * delays2,
+            dur: durations2,
+            from: 0,
+            to: 1,
+            easing: "ease"
+          }
+        });
+      }
+    }
+  }
+};
+
   const classes = useStyles();
   const [modalShow, setModalShow] = React.useState(false);
   const [modalShow2, setModalShow2] = React.useState(false);
@@ -157,21 +397,39 @@ export default function Dashboard() {
         </GridItem>
       </GridContainer> */}
        <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
+        <GridItem xs={12} sm={12} md={6}>
           <Card chart>
-            <CardHeader color="info">
+            <CardHeader color="success">
               <ChartistGraph
                 className="ct-chart"
-                data={emailsSubscriptionChart.data}
+                data={newcasesChart.data}
                 type="Bar"
-                options={emailsSubscriptionChart.options}
-                responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                listener={emailsSubscriptionChart.animation}
+                options={newcasesChart.options}
+                responsiveOptions={newcasesChart.responsiveOptions}
+                listener={newcasesChart.animation}
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Recent Ratings</h4>
-              <p className={classes.cardCategory}>Ratings through Customer Feedbacks</p>
+              <h4 className={classes.cardTitle}>Cases Reported</h4>
+              <p className={classes.cardCategory}>Compare Cases Reported for Today and past 2 days</p>
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={6}>
+          <Card chart>
+            <CardHeader color="primary">
+              <ChartistGraph
+                className="ct-chart"
+                data={customerfeedbackChart.data}
+                type="Bar"
+                responsiveOptions={customerfeedbackChart.responsiveOptions}
+                options={customerfeedbackChart.options}
+                listener={customerfeedbackChart.animation}
+              />
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle}>Customer Feedback</h4>
+              <p className={classes.cardCategory}>Standard obtained through Customer Feedbacks Today</p>
             </CardBody>
           </Card>
         </GridItem>
