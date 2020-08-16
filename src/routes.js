@@ -18,15 +18,12 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import PostAdd from "@material-ui/icons/PostAdd";
-import Notifications from "@material-ui/icons/Notifications";
 import Apps from "@material-ui/icons/Apps";
-import ExitToApp from "@material-ui/icons/ExitToApp"
 import FeedBack from "@material-ui/icons/Feedback"
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
-import Analytics from "views/Analytics/2Analytics.js";
+import Analytics from "views/Analytics/Analytics.js";
 import Functions from "views/Functions/Functions.js";
-import NotificationsPage from "views/Notifications/Notifications.js";
 import TableList from "views/TableList/TableList";
 
 
