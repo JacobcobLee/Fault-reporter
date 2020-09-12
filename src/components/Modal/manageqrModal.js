@@ -1,6 +1,4 @@
 import React from 'react';
-import { Fragment } from 'react';
-import Select from 'react-select';
 import {useState} from 'react';
 import Button from "components/CustomButtons/Button.js";
 import Modal from 'react-bootstrap/Modal';
@@ -20,8 +18,7 @@ function getQR(){
     //console.log(response.data);
       qr.push(response.data)
       array.push(qr[0])
-      console.log("herrrr");
-      console.log(array);
+      //console.log(array);
   })
 }
 getQR();
@@ -41,7 +38,6 @@ export default function ManageqrModal(props){
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      backdrop="static"
       keyboard={false}
     >
       <ModalHeader closeButton >

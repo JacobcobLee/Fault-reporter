@@ -1,6 +1,4 @@
 import React from 'react';
-import { Fragment } from 'react';
-import Select from 'react-select';
 import Button from "components/CustomButtons/Button.js";
 import Modal from 'react-bootstrap/Modal';
 import ModalHeader from 'react-bootstrap/ModalHeader';
@@ -20,7 +18,7 @@ function getFault(){
     //console.log(response.data);
       fault.push(response.data)
       array.push(Object.values(fault[0]))
-      console.log(array);
+      //console.log(array);
   })
 }
 getFault();
@@ -50,7 +48,6 @@ export default function ManagefaultModal(props){
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      backdrop="static"
       keyboard={false}
     >
       <ModalHeader closeButton >

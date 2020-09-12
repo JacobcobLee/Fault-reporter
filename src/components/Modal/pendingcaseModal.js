@@ -14,7 +14,6 @@ import axios from 'axios';
 
 const pendingCases = [];
 const array =[];
-const testarr=[];
 function getPendingCases(){
   axios
   .get("http://localhost:8080/api/v1/faultp")
@@ -22,9 +21,8 @@ function getPendingCases(){
     try{
     pendingCases.push(response.data)
     array.push(Object.values(pendingCases[0]))
-    //testarr.push(Object.values(array[0]))
-    console.log("array[0]");
-    console.log(array[0]);
+    array[0].sort((a, b) => a - b).reverse()
+    //console.log(array[0]);
     }
     catch(error){
       console.log(error);

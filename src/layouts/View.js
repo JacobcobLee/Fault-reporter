@@ -1,25 +1,16 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
-import faultimg from "assets/img/celling_aircon.jpg";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import Switch from '@material-ui/core/Switch';
-import Grid from '@material-ui/core/Grid';
 import Button from "components/CustomButtons/Button.js";
 import axios from 'axios';
-import { Fragment } from 'react';
 import Select from 'react-select';
-import pendingcaseModal from "components/Modal/pendingcaseModal";
-import resolvedcaseModal from "components/Modal/resolvedcaseModal";
 import { useState } from 'react';
 
 
 
-const useStyles = makeStyles(styles);
 
 var pageURL = window.location.href;
 var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
@@ -43,7 +34,7 @@ export default function View() {
     function displayAnswer(dis) {
         let test = '';
         for (let i = 0; i < dis.length; i++) {
-            if (i == dis.length - 1) {
+            if (i === dis.length - 1) {
                 test += dis[i];
             } else {
                 test += dis[i] + ',';
@@ -119,7 +110,7 @@ export default function View() {
     const statusOptions = [{ value: "Resolved", label: "Resolved" }]
     return (
         <div>
-            <h3><b>Resolved Case (FOR VIEW ONLY)</b></h3>
+            <h3 style={{ textAlign: 'center' }}><b>Resolved Case (FOR VIEW ONLY)</b></h3>
             <GridContainer>
                 <GridItem xs={12} sm={12} md={3}>
                     <Card>
@@ -162,25 +153,13 @@ export default function View() {
                     </Card>
                 </GridItem>
             </GridContainer>
-            <h3><b>Incident Details</b></h3>
+            <h3 style={{ textAlign: 'center' }}><b>Incident Details</b></h3>
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
                         <CardBody>
                         <h4>{displayRadio(tryReturnRadio())}:</h4>
                         <h5><b>{displayRadio(tryReturnRadio2())}</b></h5>
-                    {/* OLDDDDDDDDDD <Card>
-                    <CardHeader>
-                            <h4>{displaynewCases[0].problem.checkbox.map(item=>{
-                                return item.name
-                            })} :</h4>
-                        </CardHeader>
-                        <CardBody>
-                            <h5><b>{displaynewCases[0].problem.checkbox.map(item=>{
-                                return item.answer
-                            })}</b></h5>
-                        </CardBody>
-                    </Card> */}
                     {
                         displayData2(displayspecificCases[0].problem.checkbox)
                     }

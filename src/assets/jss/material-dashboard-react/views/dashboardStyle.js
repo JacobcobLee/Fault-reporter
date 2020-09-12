@@ -25,7 +25,8 @@ const dashboardStyle = {
       position: "relative",
       marginRight: "3px",
       marginLeft: "3px"
-    },
+    }
+    ,
     "& .fab,& .fas,& .far,& .fal,& .material-icons": {
       top: "4px",
       fontSize: "16px",

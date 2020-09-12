@@ -30,7 +30,6 @@ import AuthenticatedComponent from './containers/AuthenticatedComponent';
 
 // core components
 import Admin from "layouts/Admin.js";
-import RTL from "layouts/RTL.js";
 import Solve from "layouts/Solve.js";
 import View from "layouts/View.js";
 import Pending from "layouts/Pending.js";
@@ -42,7 +41,6 @@ import EditFault from "layouts/EditFault.js";
 
 
 import "assets/css/material-dashboard-react.css?v=1.9.0";
-import dashboardRoutes from "routes";
 
 const hist = createBrowserHistory();
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
@@ -63,8 +61,10 @@ ReactDOM.render(
       <Route exact path="/" render={() => (
         <Redirect to="/admin/dashboard"/>
       )}/>
+      <Route exact path="/material-dashboard-react" render={() => (
+        <Redirect to="/admin/dashboard"/>
+      )}/>
       <Route path="/admin" component={Admin} />
-      <Route path="/rtl" component={RTL} />
       <Route path="/newcases/solve/" component={Solve}/>
       <Route path="/pending/view/" component={Pending}/>
       <Route path="/resolvedcases/view/" component={View} />

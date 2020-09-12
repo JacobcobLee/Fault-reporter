@@ -1,7 +1,6 @@
 import React from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import Icon from "@material-ui/core/Icon";
 // core components
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -49,7 +48,7 @@ export default function Functions() {
   test();
 
   function displayAccountModal() {
-    if (role == "Admin") {
+    if (role === "Admin") {
       return (
         <GridItem xs={12} sm={12} md={4}>
           <Card>
@@ -57,8 +56,8 @@ export default function Functions() {
               <CardIcon color="primary">
                 <SupervisorAccount />
               </CardIcon>
-              <p className={classes.cardCategory}>View Accounts/Create Accounts (ADMIN)</p>
-              <h5 className={classes.cardTitle}>View ID,Email,Last Login here!</h5>
+              <p className={classes.cardCategory}>Manage Accounts</p>
+              <h5 className={classes.cardTitle}>View/Create Accounts</h5>
             </CardHeader>
             <CardBody>
               <Button onClick={() => setModalShow4(true)} fullWidth color="success">View</Button>

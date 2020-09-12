@@ -1,5 +1,4 @@
 import React from 'react';
-import { Fragment } from 'react';
 import Select from 'react-select';
 import { useState } from 'react';
 import Button from "components/CustomButtons/Button.js";
@@ -24,12 +23,8 @@ function getUsers() {
   axios
     .get("http://localhost:8080/api/v1/allusers")
     .then((response) => {
-      //console.log(response.data);
       users.push(response.data)
       array.push(users[0])
-      //to test and see the get form DB
-      // console.log(array[0].lastSignInTime);
-      // console.log("@@@@@@@@@@@@@@@@@@@@@@@@")
     })
 }
 getUsers();
@@ -45,8 +40,8 @@ export default function ManageaccountModal(props) {
   const [role,setRole] = useState("");
 
   function createAccount() {
-    if (registeremail != "" && registerpassword != "" && registerconfirmpassword != "") {
-      if (registerpassword == registerconfirmpassword) {
+    if (registeremail !== "" && registerpassword !== "" && registerconfirmpassword !== "") {
+      if (registerpassword === registerconfirmpassword) {
         var result = auth.createUserWithEmailAndPassword(registeremail, registerpassword).then(cred => {
           return db.ref('/users/' + cred.user.uid).set({
             email: cred.user.email,
@@ -87,7 +82,7 @@ export default function ManageaccountModal(props) {
   test();
 
   function addAccount() {
-    if(role=="Admin"){
+    if(role==="Admin"){
       return (
         <div>
           <Card>
@@ -136,7 +131,6 @@ export default function ManageaccountModal(props) {
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      backdrop="static"
       keyboard={false}
     >
       <ModalHeader closeButton >

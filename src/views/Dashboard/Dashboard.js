@@ -3,134 +3,26 @@ import React from "react";
 import ChartistGraph from "react-chartist";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
-import Icon from "@material-ui/core/Icon";
-import {Component} from 'react';
-// @material-ui/icons
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
-import AccessTime from "@material-ui/icons/AccessTime";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Tasks from "components/Tasks/Tasks.js";
-import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import Danger from "components/Typography/Danger.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
 import Button from "components/CustomButtons/Button.js";
 import NewCaseModal from "components/Modal/newcaseModal.js";
 import ResolvedCaseModal from "components/Modal/resolvedcaseModal.js";
 import PendingCaseModal from "components/Modal/pendingcaseModal.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
-import { card } from "assets/jss/material-dashboard-react";
-import { CardActions } from "@material-ui/core";
 import axios from 'axios';
 import {useState} from 'react';
 
 
-// const displayFeedback=[];
-// const array=[];
-// const temp=[];
-// const temp2=[];
-// var Chartist = require("chartist");
-// var delays = 80,
-//   durations = 500;
-// var delays2 = 80,
-//   durations2 = 500;
-
-//   // response.data.forEach(store => {
-//   //   var object = {value: store, label: store}
-//   //   faultOptions.push(object)
-//   // });
-// function getCustomerFeedbacks(){
-//   axios
-//   .get("http://localhost:8080/api/v1/feedback/chart")
-//   .then((response) => {
-//     displayFeedback.push(response.data)
-//     array.push(Object.values(displayFeedback[0]))
-//     array[0].forEach(item=>{
-//       var object = item.datetime
-//       var object2 = item.rating
-//       temp.push(object)
-//       temp2.push(object2)
-//     })
-//     console.log(temp);
-//   })
-//   const feedbackChart = {
-//     data: {
-//       labels: temp
-
-      
-//       ,
-//       series: temp2
-        
-      
-//     },
-//     options: {
-//       axisX: {
-//         showGrid: false
-//       },
-//       low: 0,
-//       high: 5,
-//       chartPadding: {
-//         top: 0,
-//         right: 5,
-//         bottom: 0,
-//         left: 0
-//       }
-//     },
-//     responsiveOptions: [
-//       [
-//         "screen and (max-width: 640px)",
-//         {
-//           seriesBarDistance: 5,
-//           axisX: {
-//             labelInterpolationFnc: function(value) {
-//               return value[0];
-//             }
-//           }
-//         }
-//       ]
-//     ],
-//     animation: {
-//       draw: function(data) {
-//         if (data.type === "bar") {
-//           data.element.animate({
-//             opacity: {
-//               begin: (data.index + 1) * delays2,
-//               dur: durations2,
-//               from: 0,
-//               to: 1,
-//               easing: "ease"
-//             }
-//           });
-//         }
-//       }
-//     }
-//   };
-//   console.log("HE");
-//   console.log(feedbackChart.data)
-//   return feedbackChart;
-//   }
-// //getCustomerFeedbacks();
-
-
-import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart
-} from "variables/charts.js";
 
 
 const useStyles = makeStyles(styles);
 
-var Chartist = require("chartist");
-var delays = 80,
-  durations = 500;
 var delays2 = 80,
   durations2 = 500;
 
@@ -157,12 +49,10 @@ function getcasestodayChart(){
   axios
   .get("http://localhost:8080/api/v1/casestodaychart")
   .then((response) => {
-    console.log("its here");
-    //console.log(response.data);
     array.push(Object.keys(response.data))
     array2.push(array[0].length)
     test = array2.toString();
-    console.log(array2);
+    //console.log(array2);
     setCasesCount(test)
   })
 }
@@ -177,12 +67,10 @@ function getcasesytdChart(){
   axios
   .get("http://localhost:8080/api/v1/casesyesterdaychart")
   .then((response) => {
-    console.log("its here");
-    //console.log(response.data);
     ytdarray.push(Object.keys(response.data))
     ytdarray2.push(ytdarray[0].length)
     ytdtest = ytdarray2.toString();
-    console.log(ytdarray2);
+    //console.log(ytdarray2);
     setYtdCasesCount(ytdtest)
   })
 }
@@ -197,12 +85,10 @@ function getcasesthedaybeforeytdChart(){
   axios
   .get("http://localhost:8080/api/v1/casesthedaybeforeytdchart")
   .then((response) => {
-    console.log("its here");
-    //console.log(response.data);
     thedaybeforeytdarray.push(Object.keys(response.data))
     thedaybeforeytdarray2.push(thedaybeforeytdarray[0].length)
     thedaybeforeytdtest = thedaybeforeytdarray2.toString();
-    console.log(thedaybeforeytdarray2);
+    //console.log(thedaybeforeytdarray2);
     setTheDayBeforeYtdCasesCount(thedaybeforeytdtest)
   })
 }
@@ -283,8 +169,7 @@ function getcomplimentChart(){
   axios
   .get("http://localhost:8080/api/v1/feedbackcomplimentchart")
   .then((response) => {
-    console.log("its here");
-    console.log(response.data);
+    //console.log(response.data);
     feedbackcomplimentarray.push(Object.keys(response.data))
     feedbackcomplimentarray2.push(feedbackcomplimentarray[0].length)
     feedbackcomplimenttest = feedbackcomplimentarray2.toString();
@@ -302,8 +187,7 @@ function getcomplaintChart(){
   axios
   .get("http://localhost:8080/api/v1/feedbackcomplaintchart")
   .then((response) => {
-    console.log("its here");
-    console.log(response.data);
+    //console.log(response.data);
     feedbackcomplaintarray.push(Object.keys(response.data))
     feedbackcomplaintarray2.push(feedbackcomplaintarray[0].length)
     feedbackcomplainttest = feedbackcomplaintarray2.toString();
@@ -376,26 +260,6 @@ const customerfeedbackChart = {
   const [modalShow3, setModalShow3] = React.useState(false);
   return (
     <div>
-      {/* <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card chart>
-            <CardHeader color="info">
-              <ChartistGraph
-                className="ct-chart"
-                data={getCustomerFeedbacks().data}
-                type="Bar"
-                options={getCustomerFeedbacks().options}
-                responsiveOptions={getCustomerFeedbacks().responsiveOptions}
-                listener={getCustomerFeedbacks().animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Recent Ratings</h4>
-              <p className={classes.cardCategory}>Ratings through Customer Feedbacks</p>
-            </CardBody>
-          </Card>
-        </GridItem>
-      </GridContainer> */}
        <GridContainer>
         <GridItem xs={12} sm={12} md={6}>
           <Card chart>

@@ -1,6 +1,4 @@
 import React from 'react';
-import { Fragment } from 'react';
-import Select from 'react-select';
 import {useState} from 'react';
 import Button from "components/CustomButtons/Button.js";
 import Modal from 'react-bootstrap/Modal';
@@ -21,7 +19,7 @@ function getStores(){
     //console.log(response.data);
       stores.push(response.data)
       array.push(stores[0])
-      console.log(array);
+      //console.log(array);
   })
 }
   
@@ -59,7 +57,6 @@ export default function ManagestoreModal(props){
       size="xl"
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      backdrop="static"
       keyboard={false}
     >
       <ModalHeader closeButton >

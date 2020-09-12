@@ -14,7 +14,6 @@ import axios from 'axios';
 
 const resolvedCases = [];
 const array =[];
-const testarr=[];
 function getResolvedCases(){
   axios
   .get("http://localhost:8080/api/v1/faultresolved10") //only take last 10 of resolved cases. the rest can view at analytics
@@ -22,8 +21,8 @@ function getResolvedCases(){
     try{
     resolvedCases.push(response.data)
     array.push(Object.values(resolvedCases[0]))
-    //testarr.push(Object.values(array[0]))
-    console.log(array[0]);
+    array[0].sort((a, b) => a - b).reverse()
+    //console.log(array[0]);
     }
     catch(error){
       console.log(error);

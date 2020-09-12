@@ -1,22 +1,12 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
-import faultimg from "assets/img/celling_aircon.jpg";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import Switch from '@material-ui/core/Switch';
-import Grid from '@material-ui/core/Grid';
 import Button from "components/CustomButtons/Button.js";    
 import axios from 'axios';
-import { Fragment} from 'react';
-import Select from 'react-select';
-import pendingcaseModal from "components/Modal/pendingcaseModal";
-import resolvedcaseModal from "components/Modal/resolvedcaseModal";
 import {useState} from 'react';
-import { Redirect } from "react-router-dom";
 
 var pageURL = window.location.href;
 var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
@@ -46,7 +36,7 @@ export default function Editqrcode(){
         return item.qrstring
     }));
     function putSpecificQR(){
-        if(edit!=""){
+        if(edit!==""){
             axios
             .put("http://localhost:8080/api/v1/store/"+lastURLSegment,{"qrstring": edit.toString() })
             window.alert('Successfully edited qr!')

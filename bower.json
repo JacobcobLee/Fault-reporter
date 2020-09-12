@@ -2,9 +2,9 @@
   "name": "material-dashboard-react",
   "homepage": "https://github.com/creativetimofficial/material-dashboard-react",
   "authors": [
-    "creative-tim"
+    "Grayson Lim Chuan Kai"
   ],
-  "description": "A Badass Material-UI Kit based on Material Design",
+  "description": "Professional Dashboard for Bee Cheng Hiang Ops Team",
   "main": "public/index.html",
   "keywords": [
     "material",

@@ -1,10 +1,10 @@
 import React from 'react';
-import { browserHistory } from 'react-router-dom';
+import Button from "components/CustomButtons/Button.js";
 const FooterButtons = (props) => {
   const { submitLabel } = props;
   return (
     <div className="right">
-      <button type="submit" className="btn btn-primary">{submitLabel || 'Submit'}</button>
+      <Button className="form-control" color="rose" type="submit">{submitLabel || 'Submit'}</Button>
     </div>
   );
 };

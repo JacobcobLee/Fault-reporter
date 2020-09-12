@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import Navbar from "components/Navbars/Navbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import Hidden from "@material-ui/core/Hidden";
 
 import routes from "routes.js";
 

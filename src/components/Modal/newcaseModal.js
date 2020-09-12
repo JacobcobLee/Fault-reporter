@@ -14,7 +14,6 @@ import axios from 'axios';
 
 const newCases = [];
 const array =[];
-const testarr=[];
 function getNewCases(){
   axios
   .get("http://localhost:8080/api/v1/faultunresolved")
@@ -22,8 +21,8 @@ function getNewCases(){
     try{
     newCases.push(response.data)
     array.push(Object.values(newCases[0]))
-    //testarr.push(Object.values(array[0]))
-    console.log(array[0]);
+    //console.log(array[0]);
+    array[0].sort((a, b) => a - b).reverse()
     }
     catch(error){
       console.log(error);

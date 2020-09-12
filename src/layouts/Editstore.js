@@ -1,20 +1,10 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
-import faultimg from "assets/img/celling_aircon.jpg";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import Switch from '@material-ui/core/Switch';
-import Grid from '@material-ui/core/Grid';
 import Button from "components/CustomButtons/Button.js";    
 import axios from 'axios';
-import { Fragment} from 'react';
-import Select from 'react-select';
-import pendingcaseModal from "components/Modal/pendingcaseModal";
-import resolvedcaseModal from "components/Modal/resolvedcaseModal";
 import {useState} from 'react';
 
 var pageURL = window.location.href;
@@ -40,7 +30,6 @@ function getSpecificStore(){
 getSpecificStore();
 
 export default function Editstore(){
-    const [storelocation,setStoreLocation] = useState("");
     const [storename,setStoreName] = useState(temp[0].map(item=>{
         return item.name
     }));
@@ -51,7 +40,7 @@ export default function Editstore(){
         return item.address
     }));
     function putSpecificStore(){
-        if((storename != '')&&(storecode != '')&&(storeaddress != ''))
+        if((storename !== '')&&(storecode !== '')&&(storeaddress !== ''))
         {
             axios
             .put("http://localhost:8080/api/v1/store/"+lastURLSegment,{
