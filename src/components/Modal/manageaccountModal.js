@@ -21,7 +21,7 @@ const array = [];
 function getUsers() {
 
   axios
-    .get("http://localhost:8080/api/v1/allusers")
+    .get("http://localhost:9998/api/v1/allusers")
     .then((response) => {
       users.push(response.data)
       array.push(users[0])

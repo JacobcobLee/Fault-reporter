@@ -19,7 +19,7 @@ const displayspecificCases = [];
 
 function getSpecificCases() {
     axios
-        .get("http://localhost:8080/api/v1/fault/" + lastURLSegment)
+        .get("http://localhost:9998/api/v1/fault/" + lastURLSegment)
         .then((response) => {
             //console.log("hello");
             //console.log(displaynewCases[0].imageurl);
@@ -63,7 +63,7 @@ export default function Solve() {
 
     function putSpecificCases() {
         axios
-            .put("http://localhost:8080/api/v1/fault/" + lastURLSegment, { "status": edit.toString(), "comments": comment.toString(), "lasteditedby": user2.toString() })
+            .put("http://localhost:9998/api/v1/fault/" + lastURLSegment, { "status": edit.toString(), "comments": comment.toString(), "lasteditedby": user2.toString() })
             .then((response) => {
             window.alert('Successfully edited case!')
             window.location.href = "/admin/dashboard"
@@ -141,7 +141,7 @@ export default function Solve() {
     const [img, setimg] = useState('');
     function retrieveImg(imgURL) {
         axios
-            .get("http://localhost:8080/api/v1/image?location=" + imgURL)
+            .get("http://localhost:9998/api/v1/image?location=" + imgURL)
             .then((response) => {
                 //console.log("A@@@@");
                 //console.log(response.data);
