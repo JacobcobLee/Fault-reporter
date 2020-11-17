@@ -10,19 +10,20 @@ import {useState} from 'react';
 export default function Addstore(){
     const [storename,setStoreName] = useState("");
     const [storecode,setStoreCode] = useState("");
-    const [storeaddress,setStoreAddress] = useState("");
+    const [storeaddress,setStoreAddress] = useState ("");
+
     function addStore(){
         if((storename !== '')&&(storecode !== '')&&(storeaddress !== '') )
         {
             axios
-            .post("http://localhost:9998/api/v1/store",{
+            .post("https://bchfrserver.herokuapp.com/api/v1/store",{
                 "name": storename.toString(),
                 "code": storecode.toString(),
                 "address": storeaddress.toString()
-            })
+            }).catch((e)=>{console.log("err is at "+e)})
             window.alert('Successfully added new store!!')
             window.location.href = "/admin/functions"
-           
+           console.log("successfully added store")
         }
         else{
             window.alert('Please input neccessary data!')
@@ -30,9 +31,9 @@ export default function Addstore(){
 }
     return(
         <div>
-            <h3><b>Add Store</b></h3>
-            <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
+            <h3 style={{textAlign: 'left', marginLeft:'2.5em' }}><b>Add Store</b></h3>
+            <GridContainer justify="space-around">
+            <GridItem xs={12} sm={10} md={10} lg={11}>
                     <Card>    
                         <CardBody>
                         <h4><b>Store Name :</b></h4>
@@ -46,8 +47,9 @@ export default function Addstore(){
                         </CardBody>
                     </Card>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={12}>
-                    <Button onClick={addStore} fullWidth color="success">Add</Button> 
+                <GridItem xs={12} sm={10} md={10} lg={11}>
+                    <Button onClick={addStore} fullWidth color="success">Add</Button>
+                    <Button onClick={event =>  window.location.href='/admin/functions'} fullWidth color="danger">Cancel</Button> 
                 </GridItem>
             </GridContainer>
         </div>

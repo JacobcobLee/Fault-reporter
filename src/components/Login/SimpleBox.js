@@ -24,7 +24,7 @@ export default class SimpleBox extends Component {
             <div className="card-block">           
               <br></br>
               <div className="card-title text-center">  
-              <img src={logo} width="220px" height="80px"/> 
+              <img src={logo} width="220px" height="80px" alt="staff did not upload"/> 
               <br></br>
               <br></br>
                 {title}

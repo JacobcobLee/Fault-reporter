@@ -16,7 +16,7 @@ const array = [];
 const temp=[];
 function getSpecificQR(){
   axios
-  .get("http://localhost:9998/api/v1/store/"+lastURLSegment)
+  .get("https://bchfrserver.herokuapp.com/api/v1/store/"+lastURLSegment)
   .then((response) => {
     //console.log(response.data);
       qr.push(response.data)
@@ -28,17 +28,15 @@ function getSpecificQR(){
 }
 getSpecificQR();
 
-
-
-
 export default function Editqrcode(){
+    getSpecificQR();
     const [edit,setEdit] = useState(temp[0].map(item=>{
         return item.qrstring
     }));
     function putSpecificQR(){
         if(edit!==""){
             axios
-            .put("http://localhost:9998/api/v1/store/"+lastURLSegment,{"qrstring": edit.toString() })
+            .put("https://bchfrserver.herokuapp.com/api/v1/store/"+lastURLSegment,{"qrstring": edit.toString() })
             window.alert('Successfully edited qr!')
             window.location.href = "/admin/functions"
         }
@@ -48,9 +46,9 @@ export default function Editqrcode(){
       }
     return(
         <div>
-            <h3><b>Edit QR Code</b></h3>
-            <GridContainer>
-            <GridItem xs={12} sm={12} md={4}>
+            <h3 style={{textAlign: 'left', marginLeft:'2.5em' }}><b>Edit QR Code</b></h3>
+            <GridContainer justify="space-around">
+            <GridItem xs={12} sm={10} md={4} lg={3}>
                     <Card>
                         <CardHeader>
                             <h4><b>Store Name :</b></h4>
@@ -61,9 +59,12 @@ export default function Editqrcode(){
                         })}
                         </CardBody>
                     </Card>
+                   
+                   
                 </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                    <Card>
+
+                <GridItem xs={12} sm={10} md={4} lg={3}>
+                <Card>
                         <CardHeader>
                             <h4><b>Store Address :</b></h4>
                         </CardHeader>
@@ -74,8 +75,9 @@ export default function Editqrcode(){
                         </CardBody>
                     </Card>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                    <Card>
+
+                <GridItem xs={12} sm={10} md={4} lg={3}>
+                <Card>
                         <CardHeader>
                             <h4><b>Store Code :</b></h4>
                         </CardHeader>
@@ -85,10 +87,12 @@ export default function Editqrcode(){
                         })}
                         </CardBody>
                     </Card>
-                </GridItem>
+                </GridItem>                
+
             </GridContainer>
-            <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
+
+            <GridContainer justify="space-evenly">
+            <GridItem xs={12} sm={12} md={11} xl={11}>
                     <Card>
                         <CardHeader>
                             <h4><b>QR String :</b></h4>
@@ -99,9 +103,11 @@ export default function Editqrcode(){
                     </Card>
                 </GridItem>
             </GridContainer>
-            <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
+            <GridContainer justify="space-evenly">
+            <GridItem xs={12} sm={12} md={11} xl={11}>
                     <Button onClick={putSpecificQR} fullWidth color="success">Save</Button> 
+                    <Button onClick={event =>  window.location.href='/admin/functions'} fullWidth color="danger">Cancel</Button>
+
             </GridItem>
             </GridContainer>
         </div>

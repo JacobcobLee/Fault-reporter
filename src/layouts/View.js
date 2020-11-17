@@ -18,18 +18,19 @@ var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
 
 const displayspecificCases = [];
 
-function getSpecificCases() {
-    axios
-        .get("http://localhost:9998/api/v1/fault/" + lastURLSegment)
+async function getSpecificCases() {
+    await axios
+        .get("https://bchfrserver.herokuapp.com/api/v1/fault/" + lastURLSegment)
         .then((response) => {
             displayspecificCases.push(response.data)
         })
 }
 
-getSpecificCases();
+
 
 
 export default function View() {
+    getSpecificCases();
     //loop for all answers and if there's 2 or more, put comma in between
     function displayAnswer(dis) {
         let test = '';
@@ -98,7 +99,7 @@ export default function View() {
     const [img, setimg] = useState('');
     function retrieveImg(imgURL) {
         axios
-            .get("http://localhost:9998/api/v1/image?location=" + imgURL)
+            .get("https://bchfrserver.herokuapp.com/api/v1/image?location=" + imgURL)
             .then((response) => {
                 //console.log("A@@@@");
                 //console.log(response.data);
@@ -110,9 +111,9 @@ export default function View() {
     const statusOptions = [{ value: "Resolved", label: "Resolved" }]
     return (
         <div>
-            <h3 style={{ textAlign: 'center' }}><b>Resolved Case (FOR VIEW ONLY)</b></h3>
-            <GridContainer>
-                <GridItem xs={12} sm={12} md={3}>
+            <h3 style={{textAlign: 'left', marginLeft:'2.5em' }}><b>Solve Case</b></h3>
+            <GridContainer justify="space-around">
+                <GridItem xs={12} sm={12} md={9} lg={5}>
                     <Card>
                         <CardHeader>
                             <h4><b>Reported on:</b></h4>
@@ -121,8 +122,6 @@ export default function View() {
                             <h5>{displayspecificCases[0].dateTime}</h5>
                         </CardBody>
                     </Card>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
                     <Card>
                         <CardHeader>
                             <h4><b>Store Location:</b></h4>
@@ -132,7 +131,8 @@ export default function View() {
                         </CardBody>
                     </Card>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
+
+                <GridItem xs={12} sm={12} md={6} lg={5}>
                     <Card>
                         <CardHeader>
                             <h4><b>Staff Reported:</b></h4>
@@ -141,8 +141,6 @@ export default function View() {
                             <h5>{displayspecificCases[0].staffName}</h5>
                         </CardBody>
                     </Card>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
                     <Card>
                         <CardHeader>
                             <h4><b>Fault Type:</b></h4>
@@ -153,9 +151,9 @@ export default function View() {
                     </Card>
                 </GridItem>
             </GridContainer>
-            <h3 style={{ textAlign: 'center' }}><b>Incident Details</b></h3>
-            <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
+            <h3 style={{textAlign: 'left', marginLeft:'2.5em' }}><b>Incident Details</b></h3>
+            <GridContainer justify="space-around">
+                <GridItem xs={12} sm={12} md={11} lg={11}>
                     <Card>
                         <CardBody>
                         <h4>{displayRadio(tryReturnRadio())}:</h4>
@@ -165,7 +163,7 @@ export default function View() {
                     }
                     <br></br>
                     <h4>Fault Image:</h4>
-                    <img width="360px" height="270px" src={img} />
+                    <img width="360px" height="270px" src={img} alt="staff did not upload"/>
                     <br></br>
                     <br></br>
                     <h4>Description:</h4>
@@ -191,9 +189,11 @@ export default function View() {
                     </Card>
                 </GridItem>
             </GridContainer>
-            <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
+            <GridContainer justify="space-around">
+                <GridItem xs={12} sm={12} md={11} lg={11}>
                     <Button onClick={event =>  window.location.href='/admin/dashboard'} fullWidth color="success">Done</Button>
+                    <Button onClick={event =>  window.location.href='/admin/dashboard'} fullWidth color="danger">Cancel</Button>
+
                 </GridItem>
             </GridContainer>
         </div>

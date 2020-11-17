@@ -16,7 +16,7 @@ const resolvedCases = [];
 const array =[];
 function getResolvedCases(){
   axios
-  .get("http://localhost:9998/api/v1/faultresolved10") //only take last 10 of resolved cases. the rest can view at analytics
+  .get("https://bchfrserver.herokuapp.com/api/v1/faultresolved10") //only take last 10 of resolved cases. the rest can view at analytics
   .then((response) => {
     try{
     resolvedCases.push(response.data)
@@ -29,12 +29,12 @@ function getResolvedCases(){
     }
 })
 }
-getResolvedCases();
+
 
 const storeOptions = [];
 function getStoreOptions(){
   axios
-  .get("http://localhost:9998/api/v1/allstorename")
+  .get("https://bchfrserver.herokuapp.com/api/v1/allstorename")
   .then((response) => {
     response.data.forEach(storeName => {
       var object = {value: storeName, label: storeName}
@@ -46,15 +46,19 @@ function getStoreOptions(){
     console.log(err);
   });
 }
-getStoreOptions();
+
 
 
 export default function ResolvedcaseModal(props){
+  getResolvedCases();
+  getStoreOptions();
   //To filter the table data using dropdown value
   const [search, setSearch] = useState('')
-  const filterArray = array[0].filter(item=>{
+  var filterArray = [];
+  try{ filterArray = array[0].filter(item=>{
     return item.storeName.toLowerCase().includes(search.toLowerCase())
-  })
+  })}catch(e){console.log("err in resolvedcaseModal err is : " + e)}
+
   return (
     <Modal
       {...props}

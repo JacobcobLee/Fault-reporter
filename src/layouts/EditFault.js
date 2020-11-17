@@ -8,6 +8,7 @@ import Button from "components/CustomButtons/Button.js";
 import axios from 'axios';
 import Select from 'react-select';
 import { useState } from 'react';
+// import { card } from "assets/jss/material-dashboard-react";
 
 var pageURL = window.location.href;
 var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
@@ -15,11 +16,12 @@ var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
 const fault = [];
 const array = [];
 const temp = [];
+// let getEmail;
 
 
 function getSpecificFault() {
     axios
-        .get("http://localhost:9998/api/v1/category/" + lastURLSegment)
+        .get("https://bchfrserver.herokuapp.com/api/v1/category/" + lastURLSegment)
         .then((response) => {
             console.log('response')
             fault.push(response.data)
@@ -29,11 +31,20 @@ function getSpecificFault() {
             console.log('Temp');
             console.log(temp[0][0]);
         })
+
+    // axios
+    //     .get("https://bchfrserver.herokuapp.com/api/v1/category/" + lastURLSegment)
+    //     .then((response) => {
+    //         getEmail = response[0][0].email
+    //         console.log("@@@@@@@@@@@@@@@@@@@@@@"+getEmail);
+    //     });
 }
+
+
 getSpecificFault();
-
-
 export default function EditFault() {
+    getSpecificFault();
+    // const [emailDisplay, setDisplayHaveEmail] = useState(temp[0][0].email)
     const [displayhaveradio, setDisplayHaveRadio] = useState(temp[0][0].haveRadio);
     const [displayhaveinput, setDisplayHaveInput] = useState(temp[0][0].haveInput);
     const [displayhavecheckbox, setDisplayHaveCheckbox] = useState(temp[0][0].haveCheck);
@@ -41,6 +52,7 @@ export default function EditFault() {
     //for all answer state
 
     const [faultname, setFaultName] = useState(temp[0][0].name);
+    const [emailCatch, setEmail] = useState(temp[0][0].email);
     let radioval = {};
     if (temp[0][0].radio != null) {
         radioval = Object.values(temp[0][0].radio);
@@ -67,7 +79,7 @@ export default function EditFault() {
     let inputval = {};
     if (temp[0][0].input != null) {
         inputval = Object.values(temp[0][0].input);
-        console.log('hi');
+        // console.log('hi');
     } else {
         inputval = '';
     }
@@ -136,6 +148,7 @@ export default function EditFault() {
     }
     function submit() {
         const name = faultname;
+        const email = emailCatch;
         const havRadio = displayhaveradio;
         const havInput = displayhaveinput;
         const havCheck = displayhavecheckbox;
@@ -145,11 +158,12 @@ export default function EditFault() {
         let validatedata = validateData(havCheck,submitCheckbox,havRadio,submitRadio,havInput,submitInput);
     
         if(validatedata === true){
+            //validate the data, make sure theres stuff inside
             if ((name !== '') && ((submitRadio !== null) || (submitCheckbox !== null))) {
-                const total = { name: name, haveRadio: havRadio, haveInput: havInput, haveCheck: havCheck, input: submitInput, radio: submitRadio, checkbox: submitCheckbox };
+                const total = { name: name, email: email, haveRadio: havRadio, haveInput: havInput, haveCheck: havCheck, input: submitInput, radio: submitRadio, checkbox: submitCheckbox};
                 console.log(total);
-                axios.put("http://localhost:9998/api/v1/category/" + lastURLSegment, total)
-                window.alert('Successfully Updated fault type!')
+                axios.put("https://bchfrserver.herokuapp.com/api/v1/category/" + lastURLSegment, total)//submit the array object
+                window.alert('Saved!')
                 window.location.href = "/admin/functions"
             } else {
                 window.alert('Please enter nessasary data!\nRequired minimum value: Name & Radio/Checkbox');
@@ -157,6 +171,9 @@ export default function EditFault() {
         }else{
 
         }
+    }
+    function cancelButton(){
+        window.location.href = "/admin/functions"
     }
     function onChangeRadio(e) {
         setDisplayHaveRadio(e.value);
@@ -166,9 +183,6 @@ export default function EditFault() {
             setRadioQuestion2('');
             setRadioAnswer2('');
         }
-
-
-
     }
     function onChangeCheckbox(e) {
         setDisplayHaveCheckbox(e.value);
@@ -189,11 +203,12 @@ export default function EditFault() {
     function displayRadio() {
         if (displayhaveradio === "true") {
             return (
-                <GridItem xs={12} sm={12} md={12}>
+                <GridItem xs={12} sm={12} md={11} xl={11}>
                     <Card>
                         <CardHeader>
                             <h3><b>Dropdown</b></h3>
                         </CardHeader>
+                        <Card>
                         <CardBody>
                             <h4>Dropdown Question 1:</h4>
                             <input type="text" onChange={e => setRadioQuestion1(e.target.value)} className="form-control" value={radioquestion1} isDisabled="false" />
@@ -207,6 +222,7 @@ export default function EditFault() {
                             <h4>Dropdown Answer 2:</h4>
                             <input type="text" onChange={e => setRadioAnswer2(e.target.value)} className="form-control" value={radioanswer2} isDisabled="false" />
                         </CardBody>
+                        </Card>
                     </Card>
                 </GridItem>
             )
@@ -218,11 +234,12 @@ export default function EditFault() {
         if (displayhavecheckbox === "true") {
             if (checkval.length > 1) {
                 return (
-                    <GridItem xs={12} sm={12} md={12}>
+                    <GridItem xs={12} sm={12} md={11} xl={11}>
                         <Card>
                             <CardHeader>
                                 <h3><b>Checkbox</b></h3>
                             </CardHeader>
+                            <Card>
                             <CardBody>
                                 <h4>Checkbox Question :</h4>
                                 <input className="form-control" onChange={e => setCheckboxQuestion1(e.target.value)} type="text" value={checkboxquestion1} placeholder="Enter Checkbox Question.." />
@@ -236,17 +253,18 @@ export default function EditFault() {
                                 <h4>Checkbox Answer 2 (Text will be split into using (,) e.g Apple,Orange) :</h4>
                                 <input className="form-control" onChange={e => setCheckboxAnwer2(e.target.value)} type="text" value={checkboxanswer2} placeholder="Enter Checkbox Answer 2.." />
                             </CardBody>
+                            </Card>
                         </Card>
                     </GridItem>
                 )
             } else {
                 return (
-                    <GridItem xs={12} sm={12} md={12}>
+                    <GridItem xs={12} sm={12} md={11} xl={11}>
                         <Card>
                             <CardHeader>
                                 <h3><b>Checkbox</b></h3>
                             </CardHeader>
-
+                            <Card>
                             <CardBody>
                                 <h4>Checkbox Question :</h4>
                                 <input className="form-control" onChange={e => setCheckboxQuestion1(e.target.value)} type="text" value={checkboxquestion1} placeholder="Enter Checkbox Question.." />
@@ -261,6 +279,7 @@ export default function EditFault() {
                                 <input className="form-control" onChange={e => setCheckboxAnwer2(e.target.value)} value={checkboxanswer2} type="text" placeholder="Enter Checkbox Answer 2.." />
 
                             </CardBody>
+                            </Card>
                         </Card>
                     </GridItem>
                 )
@@ -271,15 +290,17 @@ export default function EditFault() {
     function displayInput() {
         if (displayhaveinput === "true") {
             return (
-                <GridItem xs={12} sm={12} md={12}>
+                <GridItem xs={12} sm={12} md={11} xl={11}>
                     <Card>
                         <CardHeader>
                             <h3><b>Input</b></h3>
                         </CardHeader>
+                        <Card>
                         <CardBody>
                             <h4>Input Question:</h4>
                             <input className="form-control" onChange={e => setInputQuestion(e.target.value)} type="text" on value={inputquestion} placeholder="Enter Input Question.." />
                         </CardBody>
+                        </Card>
                     </Card>
                 </GridItem>
             )
@@ -295,16 +316,33 @@ export default function EditFault() {
     }
     return (
         <div>
-            <h3><b>Edit Fault</b></h3>
-            <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
+            
+            <GridContainer justify="space-around">
+                <GridItem xs={12} sm={12} md={11} xl={11}>
+                    
+                        <CardHeader>
+                            <h3><b>Edit Fault</b></h3>
+                        </CardHeader>
+                        <Card>
+                            <CardHeader>
+                                <h4><b>Send email notification</b></h4>
+                                <h5>note: Multiple email to be separated by ';'</h5>
+                            </CardHeader>
+                            <CardBody>
+                                <h5>eg. BchTeamLead@mail.com; Vendor@mail.com</h5>
+                                <input className="form-control" type="text" placeholder="Add/Edit Emails here" defaultValue= {emailCatch} onChange={e=>setEmail(e.target.value)}/>
+                            </CardBody>
+                        </Card>
+                    
                     <Card>
-                        <CardBody>
+                        <CardHeader>
                             <h4><b>Fault Name (Category) :</b></h4>
-                            <input className="form-control" onChange={e => setFaultName(e.target.value)} type="text" placeholder="Edit Fault Name, example..Electric Griller" defaultValue={faultname} onChange={e => setFaultName(e.target.value)} />
+                        </CardHeader>
+                        <CardBody>
+                            <input className="form-control" type="text" placeholder="Edit Fault Name, example: Electric Griller" defaultValue={faultname} onChange={e => setFaultName(e.target.value)} />
                             <br></br>
                             <h4><b>Have Dropdown :</b></h4>
-                            {console.log(temp[0][0].haveRadio)}
+                            {/* {console.log(temp[0][0].haveRadio)} */}
                             <Select
                                 defaultValue={returnDefValue(displayhaveradio)}
                                 className="basic-single"
@@ -336,18 +374,15 @@ export default function EditFault() {
                         </CardBody>
                     </Card>
                 </GridItem>
-                {
-
-                    displayRadio()
-                }
-                {
-                    displayCheckbox()
-                }
-                {
-                    displayInput()
-                }
+              { displayRadio() }
+              { displayCheckbox() }
+              { displayInput() }
+            <GridItem xs={12} sm={12} md={11} xl={11}>
                 <Button onClick={submit} fullWidth color="success">Save</Button>
+                <Button onClick={cancelButton} fullWidth color="danger">Cancel</Button>
+            </GridItem>
             </GridContainer>
         </div>
     )
 }
+

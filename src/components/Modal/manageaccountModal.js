@@ -21,23 +21,24 @@ const array = [];
 function getUsers() {
 
   axios
-    .get("http://localhost:9998/api/v1/allusers")
+    .get("https://bchfrserver.herokuapp.com/api/v1/allusers")
     .then((response) => {
       users.push(response.data)
       array.push(users[0])
     })
 }
-getUsers();
+
 
 
 
 export default function ManageaccountModal(props) {
-
+  getUsers();
   const [registeremail, setRegisterEmail] = useState("");
   const [registerpassword, setRegisterPassword] = useState("");
   const [registerconfirmpassword, setRegisterConfirmPassword] = useState("");
   const [roleofuser, setRoleOfUser] = useState("Member");
-  const [role,setRole] = useState("");
+  // eslint-disable-next-line
+  // const [role,setRole] = useState("");
 
   function createAccount() {
     if (registeremail !== "" && registerpassword !== "" && registerconfirmpassword !== "") {
@@ -50,7 +51,8 @@ export default function ManageaccountModal(props) {
           })
         })
         result.then(function () {
-          window.location.href = "/"
+          window.location.href = "admin/funtions"
+          console.log(roleofuser+"@@@@@@@@@@@@@@@@@@addaccountmodal")
         })
         result.catch(function (error) {
           var errorCode = error.code;
@@ -70,19 +72,18 @@ export default function ManageaccountModal(props) {
     }
   }
 
-  function test() {
-    auth.onAuthStateChanged(function (user) {
-      db.ref('users/'+user.uid).on('value', snapshot => {
-        let data = snapshot.val();
-        console.log(data.role);
-        setRole(data.role);
-      })
-    })
-  }
-  test();
+  // function test() {
+  //   auth.onAuthStateChanged(function (user) {
+  //     db.ref('users/'+ user.uid).on('value', snapshot => {
+  //       let data = snapshot.val();
+  //       console.log(data.role);
+  //       setRole(data.role);
+  //     })
+  //   })
+  // }
+  // test();
 
   function addAccount() {
-    if(role==="Admin"){
       return (
         <div>
           <Card>
@@ -113,18 +114,15 @@ export default function ManageaccountModal(props) {
         </div>
       )
     }
-    else{
-    }
-  }
 
   const [search, setSearch] = useState('')
 
   //filter through all data instead of only 1
-  const filterArray = users[0].filter(function (item) {
-    return Object.values(item).some(val =>
-      String(val).toLowerCase().includes(search.toLowerCase())
-    )
-  })
+  // const filterArray = users[0].filter(function (item) {
+  //   return Object.values(item).some(val =>
+  //     String(val).toLowerCase().includes(search.toLowerCase())
+  //   )
+  // })
   return (
     <Modal
       {...props}
@@ -146,11 +144,11 @@ export default function ManageaccountModal(props) {
         <Table
           tableHeaderColor="primary"
           tableHead={["Account ID", "Account Email", "Last login"]}
-          tableData={
-            filterArray.map((array) => {
-              return [array.uid, array.email, array.metadata.lastSignInTime]
-            })
-          }
+          // tableData={
+          //   filterArray.map((array) => {
+          //     return [array.uid, array.email, array.metadata.lastSignInTime]
+          //   })
+          // }
         />
       </ModalBody>
       <ModalFooter>

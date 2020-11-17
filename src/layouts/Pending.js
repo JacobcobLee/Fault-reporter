@@ -18,18 +18,19 @@ var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
 
 const displayspecificCases = [];
 
-function getSpecificCases() {
-    axios
-        .get("http://localhost:9998/api/v1/fault/" + lastURLSegment)
+async function getSpecificCases() {
+    await axios
+        .get("https://bchfrserver.herokuapp.com/api/v1/fault/" + lastURLSegment)
         .then((response) => {
             displayspecificCases.push(response.data)
         })
 }
 
-getSpecificCases();
+
 
 
 export default function Pending() {
+    getSpecificCases();
     const [edit, setEdit] = useState("Pending");
     const [comment,setComment] = useState(displayspecificCases[0].comments);
 
@@ -53,7 +54,7 @@ export default function Pending() {
 
     function putSpecificCases() {
         axios
-            .put("http://localhost:9998/api/v1/fault/" + lastURLSegment,{"status": edit.toString(), "comments": comment.toString(),"lasteditedby": user2.toString() })
+            .put("https://bchfrserver.herokuapp.com/api/v1/fault/" + lastURLSegment,{"status": edit.toString(), "comments": comment.toString(),"lasteditedby": user2.toString() })
             window.alert('Successfully edited case!')
             window.location.href = "/admin/dashboard"
     }
@@ -125,7 +126,7 @@ export default function Pending() {
     const [img, setimg] = useState('');
     function retrieveImg(imgURL) {
         axios
-            .get("http://localhost:9998/api/v1/image?location=" + imgURL)
+            .get("https://bchfrserver.herokuapp.com/api/v1/image?location=" + imgURL)
             .then((response) => {
                 //console.log("A@@@@");
                 //console.log(response.data);
@@ -137,9 +138,9 @@ export default function Pending() {
     const statusOptions = [{ value: "Pending", label: "Pending" }, { value: "Resolved", label: "Resolved" }]
     return (
         <div>
-            <h3 style={{ textAlign: 'center' }}><b>Pending Case</b></h3>
-            <GridContainer>
-                <GridItem xs={12} sm={12} md={3}>
+            <h3 style={{textAlign: 'left', marginLeft:'2.5em' }}><b>Pending Case</b></h3>
+            <GridContainer justify="space-around">
+            <GridItem xs={12} sm={12} md={5} lg={5}>
                     <Card>
                         <CardHeader>
                             <h4><b>Reported on:</b></h4>
@@ -148,8 +149,6 @@ export default function Pending() {
                             <h5>{displayspecificCases[0].dateTime}</h5>
                         </CardBody>
                     </Card>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
                     <Card>
                         <CardHeader>
                             <h4><b>Store Location:</b></h4>
@@ -159,7 +158,8 @@ export default function Pending() {
                         </CardBody>
                     </Card>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
+
+                <GridItem xs={12} sm={12} md={5} lg={5}>
                     <Card>
                         <CardHeader>
                             <h4><b>Staff Reported:</b></h4>
@@ -168,8 +168,6 @@ export default function Pending() {
                             <h5>{displayspecificCases[0].staffName}</h5>
                         </CardBody>
                     </Card>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
                     <Card>
                         <CardHeader>
                             <h4><b>Fault Type:</b></h4>
@@ -180,9 +178,9 @@ export default function Pending() {
                     </Card>
                 </GridItem>
             </GridContainer>
-            <h3 style={{ textAlign: 'center' }}><b>Incident Details</b></h3>
-            <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
+            <h3 style={{ textAlign: 'left', marginLeft:'2.5em' }}><b>Incident Details</b></h3>
+            <GridContainer justify="space-around">
+                <GridItem xs={12} sm={10} md={11} xl={11}>
                     <Card>
                         <CardBody>
                             <h4>{displayRadio(tryReturnRadio())}:</h4>
@@ -192,7 +190,7 @@ export default function Pending() {
                     }
                     <br></br>
                     <h4>Fault Image:</h4>
-                    <img width="360px" height="270px" src={img} />
+                    <img width="360px" height="270px" src={img} alt="staff did not upload/take"/>
                     <br></br>
                     <br></br>
                     <h4>Description:</h4>
@@ -220,9 +218,10 @@ export default function Pending() {
                     </Card>
                 </GridItem>
             </GridContainer>
-            <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
+            <GridContainer justify="space-around">
+                <GridItem xs={12} sm={10} md={11} xl={11}>
                     <Button onClick={putSpecificCases} fullWidth color="success">Save</Button>
+                    <Button onClick={event =>  window.location.href='/admin/dashboard'} fullWidth color="danger">Cancel</Button>
                 </GridItem>
             </GridContainer>
         </div>

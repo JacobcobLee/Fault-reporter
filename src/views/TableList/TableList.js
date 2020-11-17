@@ -21,14 +21,14 @@ export default function TableList() {
     const getFeedbacksData = async ()=> {
         try{
             await axios
-            .get("http://localhost:9998/api/v1/feedback")
+            .get("https://bchfrserver.herokuapp.com/api/v1/feedback")
             .then((response) => {
                 console.log(response.data);
                 setCustomerFeedback(Object.values(response.data));
             })
         }
         catch(e){
-            console.log(e);
+            console.log(e + "error at tablelist.js");
         }
     }
 
@@ -37,11 +37,11 @@ export default function TableList() {
         {dataField: "location", text:"Store Location",filter: textFilter()},
         {dataField: "feedbackType", text:"Feedback Type",filter: textFilter()},
         {dataField: "standard", text:"Standard",filter: textFilter()},
-        {dataField: "issue", text:"Issue",filter: textFilter()},
+        {dataField: "issue", text:"Issue",filter: textFilter(), headerStyle: (colum, colIndex) => { return { width: '25em', textAlign: 'center' }; }},
         {dataField: "rating", text:"Ratings",filter: textFilter()},
         {dataField: "staffname", text:"Staff Name",filter: textFilter()},
-        {dataField: "custemail", text:"Customer Email",filter: textFilter()},
-        {dataField: "custcontactno", text:"Customer Contact",filter: textFilter()},
+        // {dataField: "custemail", text:"Customer Email",filter: textFilter()},
+        // {dataField: "custcontactno", text:"Customer Contact",filter: textFilter()},
         {dataField: "custname", text:"Customer Name",filter: textFilter()},
     ]
 

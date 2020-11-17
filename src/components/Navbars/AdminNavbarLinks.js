@@ -23,6 +23,7 @@ export default function AdminNavbarLinks() {
   const classes = useStyles();
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
+  // eslint-disable-next-line
   const handleClickNotification = event => {
     if (openNotification && openNotification.contains(event.target)) {
       setOpenNotification(null);
@@ -30,9 +31,11 @@ export default function AdminNavbarLinks() {
       setOpenNotification(event.currentTarget);
     }
   };
+  // eslint-disable-next-line
   const handleCloseNotification = () => {
     setOpenNotification(null);
   };
+  // eslint-disable-next-line
   const handleClickProfile = event => {
     if (openProfile && openProfile.contains(event.target)) {
       setOpenProfile(null);
@@ -40,6 +43,7 @@ export default function AdminNavbarLinks() {
       setOpenProfile(event.currentTarget);
     }
   };
+  // eslint-disable-next-line
   const handleCloseProfile = () => {
     setOpenProfile(null);
   };

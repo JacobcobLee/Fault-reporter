@@ -19,6 +19,7 @@ export default function AddFault(){
 
     //for all answer state
     const [faultname,setFaultName] = useState("");
+    const [emailCatch,setEmail] = useState("");
     const [radioquestion1,setRadioQuestion1] = useState("");
     const [radioanswer1,setRadioAnswer1] = useState("");
     const [radioquestion2,setRadioQuestion2] = useState("");
@@ -81,8 +82,9 @@ export default function AddFault(){
         }
         return true;
     }
-    function submit(){
+    function submit(){ // submit functions to allow users to submit the data into the server for post/put
         const name = faultname;
+        const email = emailCatch
         const havRadio = radio;
         const havInput = input;
         const havCheck = checkbox;
@@ -92,11 +94,11 @@ export default function AddFault(){
         let validatedata = validateData(havCheck,submitCheckbox,havRadio,submitRadio,havInput,submitInput);
         if(validatedata === true){
             if((name !== '') && ((submitRadio !== null) || (submitCheckbox !== null))){
-                const total = {name: name, haveRadio: havRadio, haveInput: havInput, haveCheck: havCheck, input: submitInput, radio: submitRadio, checkbox: submitCheckbox};
+                const total = {name: name, email: email, haveRadio: havRadio, haveInput: havInput, haveCheck: havCheck, input: submitInput, radio: submitRadio, checkbox: submitCheckbox};
                 axios
-                .post("http://localhost:9998/api/v1/category",total
+                .post("https://bchfrserver.herokuapp.com/api/v1/category",total
                )
-               window.alert('Successfully added fault type!')
+               window.alert('Saved!')
                window.location.href = "/admin/functions"
             }else{
                 window.alert('Please enter nessasary data!\nRequired minimum value: Name & 1 Radio/Checkbox' );
@@ -106,10 +108,14 @@ export default function AddFault(){
         }
         
     }
+    //cancel function to allows users to cancel and go back into the functions screen
+    function cancelButton(){
+        window.location.href = "/admin/functions"
+    }
     function displayRadio(){
         if(radio === "true"){
             return(
-                <GridItem xs={12} sm={12} md={12}>
+                <GridItem xs={12} sm={12} md={11} xl={11}>
                     <Card>
                         <CardHeader>
                             <h3><b>Dropdown</b></h3>
@@ -137,7 +143,7 @@ export default function AddFault(){
     function displayCheckbox(){
         if(checkbox === "true"){
             return(
-                <GridItem xs={12} sm={12} md={12}>
+                <GridItem xs={12} sm={12} md={11} xl={11}>
                 <Card>
                     <CardHeader>
                         <h3><b>Checkbox</b></h3>
@@ -164,7 +170,7 @@ export default function AddFault(){
     function displayInput(){
         if(input === "true"){
             return(
-                <GridItem xs={12} sm={12} md={12}>
+                <GridItem xs={12} sm={12} md={11} xl={11}>
                 <Card>
                         <CardHeader>
                             <h3><b>Input</b></h3>
@@ -182,9 +188,19 @@ export default function AddFault(){
     }
     return(
         <div>
-            <h3><b>Add Fault</b></h3>
-            <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
+            <GridContainer justify="space-around">
+                <CardHeader><h3><b>Add Fault</b></h3></CardHeader>
+            <GridItem xs={12} sm={12} md={11} xl={11}>
+            <Card>
+                        <CardHeader>
+                            <h4><b>Send email notification</b></h4>
+                            <h5>note: Multiple email to be separated by ';'</h5>
+                        </CardHeader>
+                        <CardBody>
+                            <h5>eg. BchTeamLead@mail.com; Vendor@mail.com</h5>
+                            <input onChange={e=>setEmail(e.target.value)} className="form-control" type="text" placeholder="Enter email(s)"/>
+                        </CardBody>
+                    </Card>
                     <Card>
                         <CardHeader>
                             <h4><b>Fault Name (Category) :</b></h4>
@@ -224,6 +240,7 @@ export default function AddFault(){
                         />
                     </CardBody>
                     </Card>
+                    
                 </GridItem> 
                 {
                     displayRadio()
@@ -234,7 +251,10 @@ export default function AddFault(){
                 {
                     displayInput()
                 }
+                <GridItem xs={12} sm={12} md={11} xl={11}>
                  <Button onClick={submit} fullWidth color="success">Add</Button> 
+                 <Button onClick={cancelButton} fullWidth color="danger">Cancel</Button>
+                 </GridItem> 
             </GridContainer>
         </div>
     )

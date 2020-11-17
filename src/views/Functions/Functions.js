@@ -17,10 +17,8 @@ import ManageQrModal from "components/Modal/manageqrModal.js";
 import ManageStoreModal from "components/Modal/managestoreModal.js";
 import ManageFaultModal from "components/Modal/managefaultModal.js";
 import ManageAccountModal from "components/Modal/manageaccountModal.js";
-import { auth, db } from '../../Firebase';
 import { useState } from 'react';
-
-
+import axios from 'axios';
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
 
@@ -32,21 +30,70 @@ export default function Functions() {
   const [role, setRole] = useState("");
   const [modalShow, setModalShow] = React.useState(false);
   const [modalShow2, setModalShow2] = React.useState(false);
-  const [modalShow3, setModalShow3] = React.useState(false);
+  const [ modalShow3, setModalShow3] = React.useState(false);
   const [modalShow4, setModalShow4] = React.useState(false);
 
+  // function test2go(){
+  //     console.log("@@@@@@@@@@@@@")
+  //     db.ref('users/').on('value', snapshot => {
+  //       let data = snapshot.val();
+  //       data.map((element) => {
+  //         if(element === localStorage.email){
+  //           setRole(element.role)
+  //           return console.log(element.email)
+  //         }else{
+  //           setRole("Member")
+  //           return console.log("member")
+  //         }
+  //       });
+  //     })
+  // }
 
-  function test() {
-    auth.onAuthStateChanged(function (user) {
-      db.ref('users/' + user.uid).on('value', snapshot => {
-        let data = snapshot.val();
-        console.log(data.role);
-        setRole(data.role);
-      })
+  // new ManageFaultModal().getFault();
+  // new ManageAccountModal().getUsers();
+  // new ManageQrModal().getQR();
+  // new ManageStoreModal().getStores();
+
+  function getRole(){
+    axios
+  .get("https://bchfrserver.herokuapp.com/api/v1/role")
+  .then((response) => {
+    var obj = response.data;
+    var arr = [];
+    var userEmail = localStorage.getItem('user')
+    for (var i in obj){
+      arr.push(obj[i])
+    }
+    // console.log(arr[1].role);
+    // console.log(userEmail)
+     for( var v = 0; v < arr.length; v++ ){
+      //  console.log(arr.length)
+        if (arr[v].email === userEmail){
+          // console.log("role is " + arr[v].role + " email is " +arr[v].email)
+          setRole(arr[v].role)
+          // console.log("roleSet!")
+          break
+        }
+     }
+     
     })
+  .catch((err) => {
+    console.log(err + "error at Functions.js at testigo line 55")
+  })
   }
-  test();
 
+  // function test() {
+  //   auth.onAuthStateChanged(function (user) {
+  //     console.log(user.uid+"@@@@@@@@@@@@@@@@@@@")
+  //     db.ref('users/' + user.uid).once('value').then( snapshot => {
+  //       let data = snapshot.val();
+  //       console.log(data.role);
+  //       console.log(data.email);
+  //       setRole(data.role);
+  //     })
+  //   })
+  // }
+  getRole()
   function displayAccountModal() {
     if (role === "Admin") {
       return (
@@ -86,7 +133,7 @@ export default function Functions() {
               <CropFree />
             </CardIcon>
             <p className={classes.cardCategory}>Manage QR Codes</p>
-            <h5 className={classes.cardTitle}>Edit QR here!</h5>
+            <h5 className={classes.cardTitle}>Edit QR here</h5>
           </CardHeader>
           <CardBody>
             <Button onClick={() => setModalShow(true)} fullWidth color="success">View</Button>
@@ -104,7 +151,7 @@ export default function Functions() {
               <Store />
             </CardIcon>
             <p className={classes.cardCategory}>Manage Stores</p>
-            <h5 className={classes.cardTitle}>Add/Remove/Edit Stores here!</h5>
+            <h5 className={classes.cardTitle}>Add/Remove/Edit Stores here</h5>
           </CardHeader>
           <CardBody>
             <Button onClick={() => setModalShow2(true)} fullWidth color="success">View</Button>
@@ -122,7 +169,7 @@ export default function Functions() {
               <ReportProblem />
             </CardIcon>
             <p className={classes.cardCategory}>Manage Faults</p>
-            <h5 className={classes.cardTitle}>Add/Remove/Edit Faults here!</h5>
+            <h5 className={classes.cardTitle}>Add/Remove/Edit Faults here</h5>
           </CardHeader>
           <CardBody>
             <Button onClick={() => setModalShow3(true)} fullWidth color="success">View</Button>

@@ -8,40 +8,49 @@ import ModalFooter from 'react-bootstrap/ModalFooter';
 import Table from "components/Table/Table.js";
 import axios from 'axios';
 import {useState} from 'react';
+import { error } from 'jquery';
 
-const fault = [];
-const array = [];
+var fault = [];
+
 function getFault(){
   axios
-  .get("http://localhost:9998/api/v1/category")
+  .get("https://bchfrserver.herokuapp.com/api/v1/category")
   .then((response) => {
-    //console.log(response.data);
+    
+    // const array = [];
+      // console.log(response.data );
       fault.push(response.data)
-      array.push(Object.values(fault[0]))
-      //console.log(array);
+      // console.log(fault + "this is fault")
+      // array.push(fault[0]))
+      // console.log(array + "this is array");
   })
 }
 getFault();
-
-
 export default function ManagefaultModal(props){
+  // console.log(fault)
+  getFault();
   function deleteFault(faultid){
     var answer = window.confirm("Are you sure you want to delete?");
     if(answer){
       axios
-     .delete("http://localhost:9998/api/v1/category/" + faultid)
+     .delete("https://bchfrserver.herokuapp.com/api/v1/category/" + faultid)
      window.location.href = "/admin/functions"
     }
     else{
         window.close();
     } 
   }
+
   const [search, setSearch] = useState('')
 
+
+  // console.log(getFault().array[0]+"@@@@@@@@@!!!!!!!!!!!!!")
   //filter through all data instead of only 1
-  const filterArray = array[0].filter(item=>{
-    return item.name.toLowerCase().includes(search.toLowerCase())
-  })
+  // const filterArray = fault[0].filter((item)=>{
+  //     return item.name.toLowerCase().includes(search.toLowerCase())
+  //   })
+  
+
   return (
     <Modal
       {...props}
@@ -62,11 +71,11 @@ export default function ManagefaultModal(props){
       <Table
               tableHeaderColor="primary"
               tableHead={["Fault type", "Has Radio Option?", "Has Checkbox Option?", "", ""]}
-              tableData={
-                filterArray.map((array) => {
-                  return [array.name,array.haveRadio,array.haveCheck,<Button onClick={event =>  window.location.href='/fault/editfault/'+array.uuid} fullWidth color="info">Edit</Button>,<Button onClick={() => deleteFault(array.uuid)} fullWidth color="danger">Remove</Button>]
-              })
-              }
+              // tableData={
+              //   filterArray.map((array) => {
+              //     return [array.name,array.haveRadio,array.haveCheck,<Button onClick={event =>  window.location.href='/fault/editfault/'+array.uuid} fullWidth color="info">Edit</Button>,<Button onClick={() => deleteFault(array.uuid)} fullWidth color="danger">Remove</Button>]
+              // })
+              // }
             />
       </ModalBody>
       <ModalFooter>

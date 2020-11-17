@@ -10,11 +10,11 @@ import Table from "components/Table/Table.js";
 import axios from 'axios';
 
 
-const stores = [];
-const array = [];
+var stores = [];
+var array = [];
 function getStores(){
   axios
-  .get("http://localhost:9998/api/v1/store")
+  .get("https://bchfrserver.herokuapp.com/api/v1/allstore")
   .then((response) => {
     //console.log(response.data);
       stores.push(response.data)
@@ -22,17 +22,15 @@ function getStores(){
       //console.log(array);
   })
 }
-  
 getStores();
 
-
-
 export default function ManagestoreModal(props){
+  getStores();
   function deleteStore(storeCode){
     var answer = window.confirm("Are you sure you want to delete?");
     if(answer){
       axios
-     .delete("http://localhost:9998/api/v1/store/" + storeCode)
+     .delete("https://bchfrserver.herokuapp.com/api/v1/store/" + storeCode)
      window.location.href = "/admin/functions"
     }
     else{

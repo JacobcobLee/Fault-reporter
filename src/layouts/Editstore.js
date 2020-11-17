@@ -16,20 +16,21 @@ const temp=[];
 const temp2=[];
 function getSpecificStore(){
   axios
-  .get("http://localhost:9998/api/v1/store/"+lastURLSegment)
+  .get("https://bchfrserver.herokuapp.com/api/v1/store/"+lastURLSegment)
   .then((response) => {
     //console.log(response.data);
       store.push(response.data)
       array.push(store[0])
       temp.push(Object.values(array[0]))
       temp2.push(Object.keys(array[0]))
-      console.log("below");
-      console.log(temp);
+    //   console.log("below");
+    //   console.log(temp);
   })
 }
-getSpecificStore();
 
+    getSpecificStore();
 export default function Editstore(){
+    getSpecificStore();
     const [storename,setStoreName] = useState(temp[0].map(item=>{
         return item.name
     }));
@@ -43,7 +44,7 @@ export default function Editstore(){
         if((storename !== '')&&(storecode !== '')&&(storeaddress !== ''))
         {
             axios
-            .put("http://localhost:9998/api/v1/store/"+lastURLSegment,{
+            .put("https://bchfrserver.herokuapp.com/api/v1/store/"+lastURLSegment,{
                 "name": storename.toString(), 
                 "code": storecode.toString(),
                 "address": storeaddress.toString()
@@ -59,9 +60,9 @@ export default function Editstore(){
       }
     return(
         <div>
-            <h3><b>Edit Store</b></h3>
-            <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
+            <h3 style={{textAlign: 'left', marginLeft:'2.5em' }}><b>Edit Store</b></h3>
+            <GridContainer justify="space-around">
+            <GridItem xs={12} sm={10} md={11} lg={11}>
                     <Card>
                         <CardBody>
                         <h4><b>Store Name :</b></h4>
@@ -75,8 +76,9 @@ export default function Editstore(){
                         </CardBody>
                     </Card>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={12}>
-                    <Button onClick={putSpecificStore} fullWidth color="success">Save</Button> 
+                <GridItem xs={12} sm={12} md={11} lg={11}>
+                    <Button onClick={putSpecificStore} fullWidth color="success">Save</Button>
+                    <Button onClick={event =>  window.location.href='/admin/functions'} fullWidth color="danger">Cancel</Button>
                 </GridItem>
             </GridContainer>
         </div>
