@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
@@ -15,38 +15,43 @@ var pageURL = window.location.href;
 var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
 //console.log(lastURLSegment);
 
-const displayspecificCases = [];
-
-async function getSpecificCases() {
-    await axios
-        .get("https://bchfrserver.herokuapp.com/api/v1/fault/" + lastURLSegment)
-        .then((response) => {
-            //console.log("hello");
-            //console.log(displaynewCases[0].imageurl);
-            //     try{
-            displayspecificCases.push(response.data)
-            //   array.push(displaynewCases[0])
-            //   testarr.push(Object.values(array[0]))
-            //   console.log("xia mian");
-            //   console.log(testarr);
-            //     }
-            //     catch(error){
-            //         console.log(error)
-            //     }
-        })
-}
-
-
-
 
 export default function Solve() {
-    getSpecificCases();
+    const [displayspecificCases, setdisplayspecificCases] = useState([])
     const [edit, setEdit] = useState("Unresolved");
-    const [comment, setComment] = useState(displayspecificCases[0].comments);
-    //const [currentuser,setCurrentUser] = useState();
-
+    const [comment, setComment] = useState(displayspecificCases.comments);
+    const [img, setimg] = useState('');
+    const statusOptions = [{ value: "Unresolved", label: "Unresolved" }, { value: "Pending", label: "Pending" }, { value: "Resolved", label: "Resolved" }]
     let user2 = "sample text";
+    useEffect(()=>{
+        axios
+        .get("https://bchfrserver.herokuapp.com/api/v1/fault/" + lastURLSegment)
+        .then((response) => {
+            setdisplayspecificCases(response.data);
+        });
+    });
+    //const [currentuser,setCurrentUser] = useState();
+    
+    useEffect(()=>{
+        axios
+        .put("https://bchfrserver.herokuapp.com/api/v1/fault/" + lastURLSegment, { "status": edit.toString(), "comments": comment.toString(), "lasteditedby": user2.toString() })
+        .then((response) => {
+            window.alert('Successfully edited case!');
+            window.location.reload();
+            window.location.href = "/admin/dashboard";
+        });
+    });
 
+    useEffect(()=>{
+        axios
+        .get("https://bchfrserver.herokuapp.com/api/v1/image?location=" + displayspecificCases.imageurl)
+        .then((response) => {
+            console.log("image here");
+            console.log(response.data);
+            setimg(response.data.toString());
+        })
+    })    
+    
     //this function will get the email the user entered from the local storage
     function userName() {
         if (localStorage.getItem('user')) {
@@ -61,15 +66,7 @@ export default function Solve() {
             // console.log(user2); //display the the username to check in the console 
         }
     }
-
-    function putSpecificCases() {
-        axios
-            .put("https://bchfrserver.herokuapp.com/api/v1/fault/" + lastURLSegment, { "status": edit.toString(), "comments": comment.toString(), "lasteditedby": user2.toString() })
-            .then((response) => {
-            window.alert('Successfully edited case!')
-            window.location.href = "/admin/dashboard"
-        });
-    }
+    
     //loop for all answers and if there's 2 or more, put comma in between
     function displayAnswer(dis) {
         let test = '';
@@ -93,9 +90,9 @@ export default function Solve() {
     }
     //if data has one or more checkbox 
     function displayData2(dis) {
-        if (displayspecificCases[0].problem.checkbox != null) {
-            if (displayspecificCases[0].problem.checkbox.length > 1) {
-                return (displayspecificCases[0].problem.checkbox.map(item => {
+        if (displayspecificCases.problem.checkbox != null) {
+            if (displayspecificCases.problem.checkbox.length > 1) {
+                return (displayspecificCases.problem.checkbox.map(item => {
                     return (
                         <Card>
                             <CardHeader>
@@ -111,10 +108,10 @@ export default function Solve() {
                 return (
                     <Card>
                         <CardHeader>
-                            <h4>{displayspecificCases[0].problem.checkbox.name} : </h4>
+                            <h4>{displayspecificCases.problem.checkbox.name} : </h4>
                         </CardHeader>
                         <CardBody>
-                            <h5><b>{displayAnswer(displayspecificCases[0].problem.checkbox.answer)}</b></h5>
+                            <h5><b>{displayAnswer(displayspecificCases.problem.checkbox.answer)}</b></h5>
                         </CardBody>
                     </Card>
                 )
@@ -126,34 +123,20 @@ export default function Solve() {
     //return radio if there is 
     function tryReturnRadio() {
         try {
-            return displayspecificCases[0].problem.radio.name
+            return displayspecificCases.problem.radio.name
         } catch (error) {
             return null;
         }
     }
     function tryReturnRadio2() {
         try {
-            return displayspecificCases[0].problem.radio.answer
+            return displayspecificCases.problem.radio.answer
         } catch (error) {
             return null;
         }
     }
     //function to retrieve image from firestore
-    const [img, setimg] = useState('');
-    function retrieveImg(imgURL) {
-        axios
-            .get("https://bchfrserver.herokuapp.com/api/v1/image?location=" + imgURL)
-            .then((response) => {
-                //console.log("A@@@@");
-                //console.log(response.data);
-                console.log("iamge here");
-                console.log(response.data);
-                setimg(response.data.toString());
-            })
-    }
-    retrieveImg(displayspecificCases[0].imageurl);
-
-    const statusOptions = [{ value: "Unresolved", label: "Unresolved" }, { value: "Pending", label: "Pending" }, { value: "Resolved", label: "Resolved" }]
+    if(!displayspecificCases){return }
     return (
         <div>
             <h3 style={{textAlign: 'left', marginLeft:'2.5em' }}><b>Solve Case</b></h3>
@@ -164,7 +147,7 @@ export default function Solve() {
                             <h4><b>Reported on:</b></h4>
                         </CardHeader>
                         <CardBody>
-                            <h5>{displayspecificCases[0].dateTime}</h5>
+                            <h5>{displayspecificCases.dateTime}</h5>
                         </CardBody>
                     </Card>
                     <Card>
@@ -172,7 +155,7 @@ export default function Solve() {
                             <h4><b>Store Location:</b></h4>
                         </CardHeader>
                         <CardBody>
-                            <h5>{displayspecificCases[0].storeName}</h5>
+                            <h5>{displayspecificCases.storeName}</h5>
                         </CardBody>
                     </Card>
                 </GridItem>
@@ -183,7 +166,7 @@ export default function Solve() {
                             <h4><b>Staff Reported:</b></h4>
                         </CardHeader>
                         <CardBody>
-                            <h5>{displayspecificCases[0].staffName}</h5>
+                            <h5>{displayspecificCases.staffName}</h5>
                         </CardBody>
                     </Card>
                     <Card>
@@ -191,7 +174,7 @@ export default function Solve() {
                             <h4><b>Fault Type:</b></h4>
                         </CardHeader>
                         <CardBody>
-                            <h5>{displayspecificCases[0].problem.category}</h5>
+                            <h5>{displayspecificCases.problem.category}</h5>
                         </CardBody>
                     </Card>
                 </GridItem>
@@ -205,14 +188,14 @@ export default function Solve() {
                             <h5><b>{displayRadio(tryReturnRadio2())}</b></h5>
                             <br></br>
                             {
-                                displayData2(displayspecificCases[0].problem.checkbox)
+                                displayData2(displayspecificCases.problem.checkbox)
                             }
                             <h4>Fault Image:</h4>
                             <img width="360px" height="270px" src={img} alt="staff did not upload/take"/>
                             <br></br>
                             <br></br>
                             <h4>Description:</h4>
-                            {displayspecificCases[0].description}
+                            {displayspecificCases.description}
                             <br></br>
                             <br></br>
                             <h4>Issue Status:</h4>
